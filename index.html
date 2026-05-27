@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <!-- 
+        Esta parte configura la página.
+        Aquí se define el idioma, el título de la pestaña
+        y se conecta el archivo de estilos CSS.
+    -->
+
+    <meta charset="UTF-8">
+
+    <!-- 
+        Permite que la página se adapte a celulares, tablets y computadoras.
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- 
+        Nombre que aparece en la pestaña del navegador.
+    -->
+    <title>Auditoría Tiendas HappyCel</title>
+
+    <!-- 
+        Aquí se conecta el archivo de estilos.
+        Ese archivo es el que le da colores, tamaños, bordes y diseño al formulario.
+    -->
+    <link rel="stylesheet" href="estilos.css">
+</head>
+
+<body>
+
+    <!-- 
+        Contenedor principal.
+        Sirve para encerrar todo el contenido de la página
+        y mantenerlo centrado.
+    -->
+    <div class="contenedor">
+
+        <!-- 
+            Banner superior.
+            Aquí se muestra la imagen principal del formulario.
+            La imagen debe estar dentro de la carpeta img con el nombre banner.png.
+        -->
+        <div class="banner">
+            <img src="img/banner.png" alt="Banner HappyCel">
+        </div>
+
+        <!-- 
+            Formulario principal.
+            Aquí se agrupan todos los campos que va a llenar el auditor.
+            El id formAuditoria sirve para controlarlo después con JavaScript.
+        -->
+        <form class="formulario" id="formAuditoria">
+
+            <!-- Título principal del formulario -->
+            <h1>AUDITORÍA TIENDAS HAPPYCEL</h1>
+
+            <!-- ===================================================== -->
+            <!-- SECCIÓN 1: INFORMACIÓN GENERAL -->
+            <!-- ===================================================== -->
+
+            <h2>INFORMACIÓN GENERAL</h2>
+
+            <!-- 
+                Campo Ciudad.
+                El usuario debe seleccionar QUITO o GUAYAQUIL.
+                Según la ciudad seleccionada, se cargarán las tiendas correspondientes.
+            -->
+            <div class="grupo">
+                <label>Ciudad <span>*</span></label>
+                <select id="ciudad" name="ciudad" required>
+                    <option value="">Seleccione</option>
+                    <option value="Quito">QUITO</option>
+                    <option value="Guayaquil">GUAYAQUIL</option>
+                </select>
+            </div>
+
+            <!-- 
+                Campo Tienda.
+                Al inicio aparece bloqueado.
+                Se desbloquea cuando el usuario selecciona una ciudad.
+            -->
+            <div class="grupo">
+                <label>Tienda <span>*</span></label>
+                <select id="tienda" name="tienda" required disabled>
+                    <option value="">Primero seleccione una ciudad</option>
+                </select>
+            </div>
+
+            <!-- 
+                Número de auditores.
+                Si selecciona 1, se muestra un bloque para Auditor 1.
+                Si selecciona 2, se muestran bloques para Auditor 1 y Auditor 2.
+            -->
+            <div class="grupo">
+                <label>Número de auditores <span>*</span></label>
+                <select id="numeroAuditores" name="numeroAuditores" required>
+                    <option value="">Seleccione</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </select>
+            </div>
+
+            <!-- 
+                Aquí se crean automáticamente los campos de auditores.
+                Este espacio se llena con JavaScript.
+            -->
+            <div id="contenedorAuditores"></div>
+
+            <!-- ===================================================== -->
+            <!-- SECCIÓN 2: INFORMACIÓN DEL VENDEDOR -->
+            <!-- ===================================================== -->
+
+            <h2>INFORMACIÓN DEL VENDEDOR</h2>
+
+            <!-- Nombre del vendedor de la tienda -->
+            <div class="grupo">
+                <label>Ingrese nombre completo del vendedor de la tienda <span>*</span></label>
+                <input type="text" name="nombreVendedor" placeholder="INGRESE NOMBRE DEL VENDEDOR" required>
+            </div>
+
+            <!-- Cédula del vendedor -->
+            <div class="grupo">
+                <label>Ingrese número de cédula del vendedor de la tienda <span>*</span></label>
+                <input type="text" name="cedulaVendedor" placeholder="INGRESE CÉDULA DEL VENDEDOR" maxlength="10" required>
+            </div>
+
+            <!-- Cargo del vendedor -->
+            <div class="grupo">
+                <label>Ingrese el cargo del vendedor en la tienda <span>*</span></label>
+
+                <div class="opciones vertical">
+                    <label><input type="radio" name="cargoVendedor" value="JEFE DE TIENDA" required> JEFE DE TIENDA</label>
+                    <label><input type="radio" name="cargoVendedor" value="VENDEDOR SENIOR"> VENDEDOR SENIOR</label>
+                    <label><input type="radio" name="cargoVendedor" value="VENDEDOR JUNIOR"> VENDEDOR JUNIOR</label>
+                    <label><input type="radio" name="cargoVendedor" value="ENCARGADO DE BODEGA"> ENCARGADO DE BODEGA</label>
+                </div>
+            </div>
+
+            <!-- ===================================================== -->
+            <!-- SECCIÓN 3: VALIDACIÓN DE TIENDA -->
+            <!-- ===================================================== -->
+
+            <h2>VALIDACIÓN DE TIENDA</h2>
+
+            <!-- 
+                Pregunta sobre uniforme.
+                Si el usuario responde NO, se muestra un campo para explicar el motivo.
+            -->
+            <div class="grupo">
+                <label>¿El personal en tiendas está uniformado? <span>*</span></label>
+
+                <div class="opciones vertical">
+                    <label><input type="radio" name="personalUniformado" value="SI" required> SI</label>
+                    <label><input type="radio" name="personalUniformado" value="NO"> NO</label>
+                </div>
+            </div>
+
+            <!-- 
+                Este campo está oculto al inicio.
+                Solo aparece cuando se responde NO en la pregunta anterior.
+            -->
+            <div class="grupo oculto" id="motivoUniformeGrupo">
+                <label>En caso de que la anterior pregunta sea "NO". ¿Por qué razón no está uniformado? <span>*</span></label>
+                <textarea id="motivoUniforme" name="motivoUniforme" rows="4" placeholder="INGRESE EL MOTIVO"></textarea>
+            </div>
+
+            <!-- Pregunta sobre el letrero visible en tienda -->
+            <div class="grupo">
+                <label>
+                    ¿Se encuentra en el counter o cerca del counter visible el letrero en la tienda,
+                    sin modificaciones ni partes que estén tachadas o remarcadas?
+                </label>
+
+                <div class="imagen-ejemplo">
+                    <img src="img/letreroEjm.png" alt="Ejemplo letrero en tienda">
+                </div>
+
+                <div class="opciones vertical">
+                    <label><input type="radio" name="letreroVisible" value="SI" required> SI</label>
+                    <label><input type="radio" name="letreroVisible" value="NO"> NO</label>
+                </div>
+
+            </div>
+
+            <!-- ===================================================== -->
+            <!-- SECCIÓN 4: CUADRE DE CAJA -->
+            <!-- ===================================================== -->
+
+            <h2>CUADRE DE CAJA</h2>
+
+            <!-- 
+                Imagen y explicación de ejemplo.
+                Sirve como guía para que el auditor sepa qué debe revisar.
+            -->
+            <div class="grupo ejemplo-caja">
+                <h3>VALIDAR FIRMAS DE CIERRE Y APERTURA DE CAJA</h3>
+
+                <p>
+                    Ejemplo: Tiene el formato firmado, sin embargo vendedor informa que existen faltantes en días anteriores de hasta $10.
+                </p>
+
+                <div class="imagen-referencia">
+                    <img src="img/cuadre-caja.png" alt="Ejemplo cuadre de caja">
+                </div>
+            </div>
+
+            <!-- 
+                Pregunta sobre el formato del día anterior.
+                Si responde NO, se abre un campo para escribir la observación.
+            -->
+            <div class="grupo">
+                <label>¿Tiene el formato del día anterior cuadrado y firmado? <span>*</span></label>
+
+                <div class="opciones vertical">
+                    <label><input type="radio" name="formatoFirmado" value="SI" required> SI</label>
+                    <label><input type="radio" name="formatoFirmado" value="NO"> NO</label>
+                </div>
+            </div>
+
+            <!-- Campo oculto que se muestra solo si el formato NO está firmado o cuadrado -->
+            <div class="grupo oculto" id="observacionFormatoGrupo">
+                <label>Ingrese la observación del formato no cuadrado o no firmado <span>*</span></label>
+                <textarea id="observacionFormato" name="observacionFormato" rows="4" placeholder="INGRESE LA OBSERVACIÓN"></textarea>
+            </div>
+
+            <!-- Resultado del cuadre de caja -->
+            <div class="grupo">
+                <label>Realizar cuadre de caja <span>*</span></label>
+
+                <p class="ayuda">
+                    <strong>CUADRÓ CON OBSERVACIONES JUSTIFICADAS</strong> se registrará cuando la tienda presenta descuadres justificados,
+                    como por ejemplo <strong>DESCUENTO POR PLAN MOROSO</strong>. En adición, detallar en la pregunta correspondiente
+                    el motivo y adjuntar al formato de cuadre de caja el correo que respalde el motivo del descuadre.
+                </p>
+
+                <div class="opciones vertical">
+                    <label><input type="radio" name="cuadreCaja" value="FALTANTE" required> FALTANTE (SI FALTAN MÁS DE 0.25 CENTAVOS)</label>
+                    <label><input type="radio" name="cuadreCaja" value="CUADRÓ"> CUADRÓ</label>
+                    <label><input type="radio" name="cuadreCaja" value="CUADRÓ CON OBSERVACIONES JUSTIFICADAS"> CUADRÓ CON OBSERVACIONES JUSTIFICADAS</label>
+                    <label><input type="radio" name="cuadreCaja" value="SOBRANTE"> SOBRANTE (SI SOBRA MÁS DE 0.50 CENTAVOS)</label>
+                </div>
+            </div>
+
+            <!-- Valor del faltante, cuadre o sobrante -->
+            <div class="grupo">
+                <label>Ponga el valor del faltante, cuadre o sobrante <span>*</span></label>
+                <input type="number" name="valorCuadreCaja" placeholder="EJEMPLO: 5.37" step="0.01" min="0" required>
+            </div>
+
+            <!-- 
+                Carga del archivo de cuadre de caja.
+                Solo permite cargar archivos PDF.
+            -->
+            <div class="grupo">
+                <label>Cargar archivo de cuadre de caja firmados <span>*</span></label>
+
+                <p class="ayuda">
+                    Cargar en digital los depósitos y transferencias requeridos.
+                    En el caso de faltante y sobrante cargar en digital los depósitos y transferencias requeridos.
+                    Debe cargar el archivo en PDF con el siguiente nombre:
+                    <strong>Cuadre_Caja_Calderón1_AB_15FEB2025.pdf</strong>
+                </p>
+
+                <input type="file" name="archivoCuadreCaja" accept="application/pdf" required>
+            </div>
+
+            <!-- ===================================================== -->
+            <!-- SECCIÓN 5: CUADRE DE INVENTARIO -->
+            <!-- ===================================================== -->
+
+            <h2>CUADRE DE INVENTARIO</h2>
+
+            <!-- Pregunta sobre caja fuerte -->
+            <div class="grupo">
+                <label>¿La caja fuerte en donde se encuentran los celulares se encuentra cerrada? <span>*</span></label>
+
+                <div class="opciones vertical">
+                    <label><input type="radio" name="cajaFuerteCerrada" value="SI" required> SI</label>
+                    <label><input type="radio" name="cajaFuerteCerrada" value="NO"> NO</label>
+                </div>
+            </div>
+
+            <!-- Pregunta sobre transferencias pendientes -->
+            <div class="grupo">
+                <label>Existencia de transferencias en tránsito o por registrar. <span>*</span></label>
+
+                <p class="ayuda">
+                    Es necesario revisar las transferencias enviadas por la tienda y aquellas que la tienda vaya a recibir.
+                </p>
+
+                <div class="opciones vertical">
+                    <label>
+                        <input type="radio" name="transferenciasTransito" value="SI" required>
+                        SI. HAY QUE REGISTRAR EN EL SISTEMA O JUSTIFICAR CON CORREO EN EL CASO QUE ESTÉN EN TRÁNSITO
+                    </label>
+
+                    <label>
+                        <input type="radio" name="transferenciasTransito" value="NO">
+                        NO
+                    </label>
+                </div>
+            </div>
+
+            <!-- Resultado del cuadre de inventario -->
+            <div class="grupo">
+                <label>Realizar cuadre de inventario <span>*</span></label>
+
+                <p class="ayuda">
+                    <strong>SI CUADRÓ CON OBSERVACIONES JUSTIFICADAS</strong> se registrará cuando la tienda presenta descuadres justificados,
+                    como por ejemplo <strong>ACCESORIO PENDIENTE DE DAR DE BAJA</strong>. En adición, detallar en la pregunta de observaciones
+                    el motivo y adjuntar al Kardex de inventario el correo que respalde el motivo del descuadre.
+                </p>
+
+                <div class="opciones vertical">
+                    <label><input type="radio" name="cuadreInventario" value="SI CUADRÓ EL INVENTARIO" required> SI CUADRÓ EL INVENTARIO</label>
+                    <label><input type="radio" name="cuadreInventario" value="SI CUADRÓ EL INVENTARIO CON OBSERVACIONES JUSTIFICADAS"> SI CUADRÓ EL INVENTARIO CON OBSERVACIONES JUSTIFICADAS</label>
+                    <label><input type="radio" name="cuadreInventario" value="NO CUADRÓ EL INVENTARIO"> NO CUADRÓ EL INVENTARIO</label>
+                </div>
+            </div>
+
+            <!-- Archivo del cuadre de inventario -->
+            <div class="grupo">
+                <label>Cargar el cuadre inventario firmados <span>*</span></label>
+
+                <p class="ayuda">
+                    Cargar en digital las facturas generadas por los faltantes.
+                    Imprima el kárdex con la ayuda del responsable de tienda y, una vez realizado el inventario,
+                    digitalícelo en formato PDF y cárguelo con el siguiente nombre:
+                    <strong>Inventario_Calderon1_AB_15FEB2025.pdf</strong>
+                </p>
+
+                <input type="file" name="archivoInventario" accept="application/pdf" required>
+            </div>
+
+            <!-- Comentarios del inventario -->
+            <div class="grupo">
+                <label>Ingrese sus comentarios <span>*</span></label>
+
+                <p class="ayuda">
+                    Ejemplo: Faltaron dos audífonos y el responsable de tienda repuso el valor, el cual fue facturado.
+                </p>
+
+                <textarea name="comentariosInventario" rows="5" placeholder="INGRESE SUS COMENTARIOS" required></textarea>
+            </div>
+
+            <!-- 
+                Cantidad de artículos faltantes.
+                Si se coloca 0, no aparece la tabla.
+                Si se coloca 1 o más, se crea una tabla con esa cantidad de filas.
+            -->
+            <div class="grupo">
+                <label>¿Cuántos artículos faltantes hay? <span>*</span></label>
+                <input type="number" id="cantidadFaltantes" name="cantidadFaltantes" min="0" value="0" required>
+            </div>
+
+            <!-- 
+                Tabla de artículos faltantes.
+                Está oculta al inicio.
+                Se muestra solo cuando se indica que hay artículos faltantes.
+            -->
+            <div class="grupo oculto" id="tablaFaltantesGrupo">
+                <label>Detalle de artículos faltantes</label>
+
+                <div class="tabla-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>CÓDIGO</th>
+                                <th>DESCRIPCIÓN</th>
+                                <th>CANT KARDEX</th>
+                                <th>CANT FÍSICO</th>
+                                <th>DIF</th>
+                                <th>NÚMERO GLP</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tablaFaltantesBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 
+                Archivo para faltantes no justificados.
+                Permite adjuntar factura o acta de descuento.
+                Solo acepta PDF.
+            -->
+            <div class="grupo">
+                <label>En caso de faltantes de mercadería no justificado adjunte el valor de la factura o del acta de descuento</label>
+                <input type="file" name="archivoFaltantesNoJustificados" accept="application/pdf">
+            </div>
+
+            <!-- ===================================================== -->
+            <!-- SEGUNDA PARTE DEL FORMULARIO -->
+            <!-- Esta sección aparece cuando se presiona Siguiente -->
+            <!-- ===================================================== -->
+
+            <div id="segundaParte" class="oculto">
+
+                <h2>REVISIÓN PERMISOS DE FUNCIONAMIENTO</h2>
+
+                <p class="descripcion-seccion">
+                    Recuerde revisar que los documentos de funcionamiento estén visibles en la tienda y actualizados al año en curso.
+                </p>
+
+                <div class="grupo">
+                    <label>Revisar que cuente con los siguientes permisos de manera visible en la tienda <span>*</span></label>
+                    <div class="opciones vertical">
+                        <label><input type="checkbox" name="permisos[]" value="PATENTE MUNICIPAL"> PATENTE MUNICIPAL</label>
+                        <label><input type="checkbox" name="permisos[]" value="PERMISO DE FUNCIONAMIENTO"> PERMISO DE FUNCIONAMIENTO</label>
+                        <label><input type="checkbox" name="permisos[]" value="RUC VISIBLE"> RUC VISIBLE</label>
+                        <label><input type="checkbox" name="permisos[]" value="OTROS DOCUMENTOS VIGENTES"> OTROS DOCUMENTOS VIGENTES</label>
+                    </div>
+                </div>
+
+                <div class="grupo">
+                    <label>Ingrese sus comentarios <span>*</span></label>
+                    <p class="ayuda">Ejemplo: LE FALTÓ LA PATENTE POR NO ESTAR ACTUALIZADA.</p>
+                    <textarea name="comentariosPermisos" rows="4" placeholder="INGRESE SUS COMENTARIOS" required></textarea>
+                </div>
+
+                <div class="grupo">
+                    <label>¿Ha llegado algún representante de los órganos de control a la tienda? <span>*</span></label>
+
+                    <div class="opciones vertical">
+                        <label><input type="radio" name="representanteControl" value="SI" required> SI</label>
+                        <label><input type="radio" name="representanteControl" value="NO"> NO</label>
+                    </div>
+                </div>
+
+                <div class="grupo oculto aviso-importante" id="avisoRecursosHumanos">
+                    <strong>Importante:</strong>
+                    Favor informar a Recursos Humanos.
+                    <p>Ejemplo: SE REPORTÓ EL 15 DE FEBRERO VÍA CORREO.</p>
+
+                    <label>Detalle del reporte realizado <span>*</span></label>
+                    <textarea id="detalleRecursosHumanos" name="detalleRecursosHumanos" rows="4" placeholder="INGRESE EL DETALLE DEL REPORTE"></textarea>
+                </div>
+
+                <h2>ESTADO DE LA TIENDA</h2>
+
+                <div class="grupo">
+                    <label>¿La tienda cuenta con dispositivos electrónicos? <span>*</span></label>
+
+                    <p class="ayuda">
+                        Dispositivos electrónicos: TECLADO, MOUSE, PARLANTE, IMPRESORA TÉRMICA, IMPRESORA MULTIFUNCIÓN,
+                        TELEVISOR Y MONITORES.
+                    </p>
+
+                    <div class="opciones vertical">
+                        <label><input type="radio" name="dispositivosElectronicos" value="SI" required> SI</label>
+                        <label><input type="radio" name="dispositivosElectronicos" value="NO"> NO</label>
+                        <label><input type="radio" name="dispositivosElectronicos" value="SI CON NOVEDADES"> SI CON NOVEDADES</label>
+                    </div>
+                </div>
+
+                <div class="grupo oculto" id="comentarioDispositivosGrupo">
+                    <label>Ingrese sus comentarios <span>*</span></label>
+                    <p class="ayuda">
+                        SI EXISTEN DISPOSITIVOS ELECTRÓNICOS CON NOVEDADES, VALIDAR QUE SE NOTIFICÓ MEDIANTE GLPI.
+                        REGISTRAR EL NÚMERO DE FORMULARIO O TICKET DE GLPI.
+                    </p>
+                    <textarea id="comentarioDispositivos" name="comentarioDispositivos" rows="4" placeholder="INGRESE SUS COMENTARIOS"></textarea>
+                </div>
+
+                <div class="grupo">
+                    <label>La TV de la tienda: ¿Está encendida? ¿Funciona correctamente? ¿Reproduce la publicidad del mes? <span>*</span></label>
+                    <p class="ayuda">Ejemplo: TV ENCENDIDA, FUNCIONA CORRECTAMENTE, NO REPRODUCE LA PUBLICIDAD DEL MES.</p>
+                    <textarea name="estadoTv" rows="4" placeholder="INGRESE LA VALIDACIÓN DE LA TV" required></textarea>
+                </div>
+
+                <div class="grupo">
+                    <label>¿La tienda dispone de volantes de campaña del mes? <span>*</span></label>
+
+                    <div class="opciones vertical">
+                        <label><input type="radio" name="volantesCampania" value="SI" required> SI</label>
+                        <label><input type="radio" name="volantesCampania" value="NO"> NO</label>
+                    </div>
+                </div>
+
+                <div class="grupo">
+                    <label>¿Tienen grapado o añadido en los volantes otro tipo de publicidad como tarjetas o impresiones con promociones ajenas a HappyCel? <span>*</span></label>
+                    <p class="ayuda">
+                        Ejemplo: LAS HOJAS VOLANTES EN LA TIENDA TIENEN GRAPADAS OTRAS PROMOCIONES QUE NO PERTENECEN A HAPPYCEL.
+                    </p>
+
+                    <div class="opciones vertical">
+                        <label><input type="radio" name="publicidadAjena" value="SI" required> SI</label>
+                        <label><input type="radio" name="publicidadAjena" value="NO"> NO</label>
+                    </div>
+                </div>
+
+                <div class="grupo">
+                    <label>Validar que el número celular corporativo esté abierto en los WhatsApp de las computadoras de la tienda <span>*</span></label>
+
+                    <div class="opciones vertical">
+                        <label><input type="radio" name="whatsappCorporativoAbierto" value="SI" required> SI</label>
+                        <label><input type="radio" name="whatsappCorporativoAbierto" value="NO"> NO</label>
+                    </div>
+                </div>
+
+                <div class="grupo">
+                    <label>Coloque el número de celular corporativo de la tienda <span>*</span></label>
+                    <input type="tel" name="celularCorporativo" placeholder="EJEMPLO: 0999999999" maxlength="10" required>
+                </div>
+
+                <div class="grupo">
+                    <label>La pintura de las paredes internas de la tienda se encuentra en buenas condiciones. Sin manchas, humedad, desgaste, etc. <span>*</span></label>
+
+                    <div class="opciones vertical">
+                        <label><input type="radio" name="pinturaInterna" value="SI" required> SI</label>
+                        <label><input type="radio" name="pinturaInterna" value="NO"> NO</label>
+                    </div>
+                </div>
+
+                <div class="grupo oculto" id="casoGlpiPinturaGrupo">
+                    <label>En caso de que la respuesta sea "NO", adjunte el número de caso de GLPI <span>*</span></label>
+                    <input type="text" id="casoGlpiPintura" name="casoGlpiPintura" placeholder="INGRESE EL NÚMERO DE CASO GLPI">
+                </div>
+
+                <div class="grupo">
+                    <label>Adjunte una foto del interior de la tienda con el mayor detalle posible <span>*</span></label>
+                    <p class="ayuda">Sube 1 archivo compatible: imagen. El tamaño máximo es de 10 MB.</p>
+                    <input type="file" name="fotoInteriorTienda" accept="image/*" required>
+                </div>
+
+                <div class="grupo">
+                    <label>¿El letrero externo de HappyCel se encuentra en buen estado, sin desgaste ni decoloración? <span>*</span></label>
+
+                    <div class="opciones vertical">
+                        <label><input type="radio" name="letreroExterno" value="SI" required> SI</label>
+                        <label><input type="radio" name="letreroExterno" value="NO"> NO</label>
+                    </div>
+                </div>
+
+                <div class="grupo">
+                    <label>Por favor adjunte una fotografía de la fachada de la tienda <span>*</span></label>
+                    <p class="ayuda">Sube 1 archivo compatible: imagen. El tamaño máximo es de 10 MB.</p>
+                    <input type="file" name="fotoFachadaTienda" accept="image/*" required>
+                </div>
+
+                <div class="grupo">
+                    <label>¿La iluminación exterior funciona correctamente? <span>*</span></label>
+
+                    <div class="opciones vertical">
+                        <label><input type="radio" name="iluminacionExterior" value="SI" required> SI</label>
+                        <label><input type="radio" name="iluminacionExterior" value="NO"> NO</label>
+                    </div>
+                </div>
+
+                <div class="grupo">
+                    <label>Nivel de limpieza <span>*</span></label>
+                    <p class="ayuda">Seleccione una opción para ver la descripción correspondiente.</p>
+
+                    <div class="opciones vertical">
+                        <label><input type="radio" name="nivelLimpieza" value="PÉSIMO" required> PÉSIMO</label>
+                        <label><input type="radio" name="nivelLimpieza" value="DEFICIENTE"> DEFICIENTE</label>
+                        <label><input type="radio" name="nivelLimpieza" value="REGULAR"> REGULAR</label>
+                        <label><input type="radio" name="nivelLimpieza" value="BUENO"> BUENO</label>
+                        <label><input type="radio" name="nivelLimpieza" value="EXCELENTE"> EXCELENTE</label>
+                    </div>
+
+                    <div class="descripcion-limpieza oculto" id="descripcionLimpieza"></div>
+                </div>
+
+                <div class="grupo">
+                    <label>Observación de limpieza de la tienda <span>*</span></label>
+                    <p class="ayuda">
+                        Ejemplo: LAS ESTANTERÍAS Y EXPOSITORES PRESENTAN ACUMULACIÓN DE POLVO EN CIERTOS LUGARES,
+                        Y AUNQUE LOS PRODUCTOS NO ESTÁN VISIBLEMENTE SUCIOS, PODRÍAN BENEFICIARSE DE UNA LIMPIEZA MÁS FRECUENTE.
+                    </p>
+                    <textarea name="observacionLimpieza" rows="4" placeholder="INGRESE LA OBSERVACIÓN DE LIMPIEZA" required></textarea>
+                </div>
+
+                <div class="grupo">
+                    <label>Verificar que no existan cédulas de terceros olvidadas o retenidas en la tienda <span>*</span></label>
+                    <p class="ayuda">
+                        En caso de encontrar cédulas de terceros, retirarlas de la tienda y entregarlas al responsable designado.
+                    </p>
+
+                    <div class="opciones vertical">
+                        <label><input type="radio" name="cedulasTerceros" value="NO EXISTEN" required> NO EXISTEN CÉDULAS DE TERCEROS</label>
+                        <label><input type="radio" name="cedulasTerceros" value="SI EXISTEN"> SÍ EXISTEN CÉDULAS DE TERCEROS</label>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Botones finales del formulario -->
+            <div class="botones">
+                <button type="button" class="btn-secundario" id="btnSiguiente">Siguiente</button>
+                <button type="submit" class="btn-principal oculto" id="btnGuardar">Guardar</button>
+            </div>
+
+        </form>
+
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- JAVASCRIPT -->
+    <!-- Esta parte hace que el formulario sea dinámico. -->
+    <!-- Sirve para cargar tiendas, mostrar campos ocultos, -->
+    <!-- convertir texto en mayúsculas y validar antes de guardar. -->
+    <!-- ===================================================== -->
+
+    <script>
+
+        /*
+            Lista de tiendas por ciudad.
+            Cuando el usuario elige una ciudad,
+            se muestran solo las tiendas que pertenecen a esa ciudad.
+        */
+        const tiendasPorCiudad = {
+            Quito: [
+                "HAPPY TIA TREBOL",
+                "CALDERÓN 1",
+                "CALDERÓN 2",
+                "CARAPUNGO 1",
+                "CARAPUNGO 2",
+                "CARCELÉN",
+                "COMITÉ DEL PUEBLO 1",
+                "COMITÉ DEL PUEBLO 2",
+                "CONDADO",
+                "COTOCOLLAO 1",
+                "COTOCOLLAO 2",
+                "EL INCA",
+                "LLANO GRANDE",
+                "MASCOTA",
+                "MENA 2",
+                "MICHELENA",
+                "POMASQUI",
+                "SAN ANTONIO",
+                "SANTA CLARA",
+                "ISLA TUMBACO",
+                "AJAVI",
+                "CHILLOGALLO",
+                "FUNDEPORTE",
+                "CUMBAYA",
+                "GUAMANI",
+                "NUEVA AURORA",
+                "LA ECUATORIANA",
+                "MARTHA BUCARAM",
+                "PLAZA DEL TEATRO",
+                "QUICENTRO SUR 1",
+                "QUICENTRO SUR 2",
+                "RECREO 1",
+                "RECREO 2",
+                "RECREO 3",
+                "SANGOLQUI 1",
+                "SANGOLQUI 2",
+                "SOLANDA",
+                "TURUBAMBA",
+                "VENTAS DIGITALES QUITO",
+                "PROCESOS",
+                "TIENDAS SIERRA",
+                "RECREO 1, 2, 3",
+                "QUICENTRO SUR 1, 2",
+                "COTOCOLLAO 1, 2",
+                "COMITE DEL PUEBLO 1, 2",
+                "CARAPUNGO 1, 2",
+                "TIENDAS QUITO SUR",
+                "TIENDAS QUITO NORTE",
+                "CALDERÓN 1, 2",
+                "SANGOLQUI 1, 2"
+            ],
+
+            Guayaquil: [
+                "DURÁN CENTRO",
+                "DURÁN RECREO",
+                "DURÁN PRIMAVERA",
+                "FLORIDA",
+                "CORAL GYE",
+                "MALL DEL NORTE",
+                "MALL DEL SOL",
+                "MALL DEL SUR",
+                "MERCADO CENTRAL",
+                "PORTETE",
+                "GUASMO SUR",
+                "9 DE OCTUBRE",
+                "MALECON 2000",
+                "MARTHA ROLDOS",
+                "VENTAS DIGITALES GUAYAQUIL",
+                "TERMINAL TERRESTRE",
+                "TIENDAS COSTA",
+                "CITY MALL"
+            ]
+        };
+
+        /*
+            Lista de auditores.
+            Estos nombres aparecen en el campo "Seleccione Auditor".
+        */
+        const auditores = [
+            "CRISTINA TOAPANTA",
+            "MAITE ACARO",
+            "MARCO GUALOTO",
+            "GABRIELA SANCHEZ",
+            "FABRICIO MEJIA",
+            "LUIS YERBABUENA",
+            "FAUSTO SALVADOR",
+            "WENDY TITUAÑA",
+            "GABRIELA MURILLO",
+            "JACQUELINE CUEVA",
+            "PAUL PEREZ",
+            "ANDRES JARAMILLO",
+            "KEVIN PERALTA",
+            "CRISTINA HIDALGO",
+            "SOLANGE ALMIÑA",
+            "JOSUE GALARZA",
+            "EDRIAN GUANOCUNGA",
+            "SUANNE SANCHEZ",
+            "KATHERINE PALAN",
+            "ESTEFANIA LEMA",
+            "CARLOS VILLALVA",
+            "PATRICIA PEREZ",
+            "ERIKA PALMA",
+            "MARTIN PALACIOS",
+            "FRANKLIN GUALA",
+            "HENRRY GUTIERREZ",
+            "JORGE AGUIRRE",
+            "JUAN MIGUEL SIMBA",
+            "PATRICIO PASTOR",
+            "FERNANDO BRAVO",
+            "KARLA BETANCOURT",
+            "LUIS MANGUA",
+            "DANIEL OÑA",
+            "ELIANA VALENZUELA",
+            "DAVID HERRERA",
+            "MARIA EUGENIA AGUIRRE",
+            "JHON CARPIO",
+            "ANDY GAVILANES",
+            "DIEGO MUÑOZ",
+            "SANTIAGO GUEVARA",
+            "FERNANDA MORALES",
+            "ARACELY ZAPATA",
+            "ROGER GUAMANI",
+            "DANIELA ALEMAN",
+            "ALEJANDRO GALARZA",
+            "EDUARDO JACOME",
+            "FELIPE PANTOJA"
+        ];
+
+        /*
+            Aquí se guardan en variables algunos campos del formulario.
+            Esto sirve para poder usarlos más abajo.
+        */
+        const ciudadSelect = document.getElementById("ciudad");
+        const tiendaSelect = document.getElementById("tienda");
+        const numeroAuditoresSelect = document.getElementById("numeroAuditores");
+        const contenedorAuditores = document.getElementById("contenedorAuditores");
+
+        /*
+            Cuando cambia la ciudad, se limpian las tiendas
+            y se cargan las tiendas de la ciudad seleccionada.
+        */
+        ciudadSelect.addEventListener("change", function () {
+            const ciudad = this.value;
+
+            tiendaSelect.innerHTML = "";
+
+            if (!ciudad) {
+                tiendaSelect.disabled = true;
+                tiendaSelect.innerHTML = '<option value="">Primero seleccione una ciudad</option>';
+                return;
+            }
+
+            tiendaSelect.disabled = false;
+            tiendaSelect.innerHTML = '<option value="">Seleccione</option>';
+
+            tiendasPorCiudad[ciudad].forEach(tienda => {
+                const option = document.createElement("option");
+                option.value = tienda;
+                option.textContent = tienda;
+                tiendaSelect.appendChild(option);
+            });
+        });
+
+        /*
+            Cuando el usuario elige el número de auditores,
+            se crean automáticamente los campos necesarios.
+        */
+        numeroAuditoresSelect.addEventListener("change", function () {
+            const cantidad = parseInt(this.value);
+
+            contenedorAuditores.innerHTML = "";
+
+            if (!cantidad) return;
+
+            for (let i = 1; i <= cantidad; i++) {
+                const bloque = document.createElement("div");
+                bloque.classList.add("bloque-auditor");
+
+                bloque.innerHTML = `
+                    <h3>Auditor ${i}</h3>
+
+                    <div class="grupo">
+                        <label>Seleccione Auditor ${i} <span>*</span></label>
+                        <select name="auditor${i}" required>
+                            <option value="">Seleccione</option>
+                            ${auditores.map(auditor => `<option value="${auditor}">${auditor}</option>`).join("")}
+                        </select>
+                    </div>
+
+                    <div class="grupo">
+                        <label>Ingrese número de cédula del Auditor ${i} <span>*</span></label>
+                        <input type="text" name="cedulaAuditor${i}" placeholder="INGRESE CÉDULA DEL AUDITOR ${i}" maxlength="10" required>
+                    </div>
+                `;
+
+                contenedorAuditores.appendChild(bloque);
+            }
+        });
+
+        /*
+            Esta parte convierte a MAYÚSCULAS lo que escriba el usuario.
+            No afecta archivos, números, fechas ni horas.
+        */
+        document.addEventListener("input", function (e) {
+            if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") {
+                if (
+                    e.target.type !== "file" &&
+                    e.target.type !== "number" &&
+                    e.target.type !== "date" &&
+                    e.target.type !== "time"
+                ) {
+                    e.target.value = e.target.value.toUpperCase();
+                }
+            }
+        });
+
+        /*
+            Si el personal NO está uniformado,
+            se muestra el campo para escribir el motivo.
+            Si responde SI, el campo se oculta.
+        */
+        document.querySelectorAll('input[name="personalUniformado"]').forEach(radio => {
+            radio.addEventListener("change", function () {
+                const grupo = document.getElementById("motivoUniformeGrupo");
+                const campo = document.getElementById("motivoUniforme");
+
+                if (this.value === "NO") {
+                    grupo.classList.remove("oculto");
+                    campo.required = true;
+                } else {
+                    grupo.classList.add("oculto");
+                    campo.required = false;
+                    campo.value = "";
+                }
+            });
+        });
+
+        /*
+            Si el formato del día anterior NO está cuadrado o firmado,
+            se muestra un campo para escribir la observación.
+        */
+        document.querySelectorAll('input[name="formatoFirmado"]').forEach(radio => {
+            radio.addEventListener("change", function () {
+                const grupo = document.getElementById("observacionFormatoGrupo");
+                const campo = document.getElementById("observacionFormato");
+
+                if (this.value === "NO") {
+                    grupo.classList.remove("oculto");
+                    campo.required = true;
+                } else {
+                    grupo.classList.add("oculto");
+                    campo.required = false;
+                    campo.value = "";
+                }
+            });
+        });
+
+        /*
+            Campos relacionados con la tabla de artículos faltantes.
+        */
+        const cantidadFaltantes = document.getElementById("cantidadFaltantes");
+        const tablaFaltantesGrupo = document.getElementById("tablaFaltantesGrupo");
+        const tablaFaltantesBody = document.getElementById("tablaFaltantesBody");
+
+        /*
+            Según la cantidad de artículos faltantes,
+            se crea una tabla con la misma cantidad de filas.
+        */
+        cantidadFaltantes.addEventListener("input", function () {
+            const cantidad = parseInt(this.value) || 0;
+
+            tablaFaltantesBody.innerHTML = "";
+
+            if (cantidad <= 0) {
+                tablaFaltantesGrupo.classList.add("oculto");
+                return;
+            }
+
+            tablaFaltantesGrupo.classList.remove("oculto");
+
+            for (let i = 1; i <= cantidad; i++) {
+                const fila = document.createElement("tr");
+
+                fila.innerHTML = `
+                    <td><input type="text" name="codigoFaltante${i}" required></td>
+                    <td><input type="text" name="descripcionFaltante${i}" required></td>
+                    <td><input type="number" name="cantKardex${i}" min="0" required></td>
+                    <td><input type="number" name="cantFisico${i}" min="0" required></td>
+                    <td><input type="number" name="diferencia${i}" required></td>
+                    <td><input type="text" name="numeroGlp${i}" required></td>
+                `;
+
+                tablaFaltantesBody.appendChild(fila);
+            }
+        });
+
+                // =====================================================
+        // BOTÓN SIGUIENTE
+        // Al dar clic muestra la segunda parte del formulario
+        // =====================================================
+
+        document.getElementById("btnSiguiente").addEventListener("click", function () {
+            const segundaParte = document.getElementById("segundaParte");
+            const btnGuardar = document.getElementById("btnGuardar");
+
+            segundaParte.classList.remove("oculto");
+            btnGuardar.classList.remove("oculto");
+
+            this.classList.add("oculto");
+
+            segundaParte.scrollIntoView({
+                behavior: "smooth"
+            });
+        });
+
+        // =====================================================
+        // REPRESENTANTE DE ÓRGANOS DE CONTROL
+        // Si responde NO, muestra aviso para Recursos Humanos
+        // =====================================================
+
+        document.querySelectorAll('input[name="representanteControl"]').forEach(radio => {
+            radio.addEventListener("change", function () {
+                const grupo = document.getElementById("avisoRecursosHumanos");
+                const campo = document.getElementById("detalleRecursosHumanos");
+
+                if (this.value === "NO") {
+                    grupo.classList.remove("oculto");
+                    campo.required = true;
+                } else {
+                    grupo.classList.add("oculto");
+                    campo.required = false;
+                    campo.value = "";
+                }
+            });
+        });
+
+        // =====================================================
+        // DISPOSITIVOS ELECTRÓNICOS
+        // Si responde SI CON NOVEDADES, muestra comentarios
+        // =====================================================
+
+        document.querySelectorAll('input[name="dispositivosElectronicos"]').forEach(radio => {
+            radio.addEventListener("change", function () {
+                const grupo = document.getElementById("comentarioDispositivosGrupo");
+                const campo = document.getElementById("comentarioDispositivos");
+
+                if (this.value === "SI CON NOVEDADES") {
+                    grupo.classList.remove("oculto");
+                    campo.required = true;
+                } else {
+                    grupo.classList.add("oculto");
+                    campo.required = false;
+                    campo.value = "";
+                }
+            });
+        });
+
+        // =====================================================
+        // PINTURA INTERNA
+        // Si responde NO, muestra campo para número de caso GLPI
+        // =====================================================
+
+        document.querySelectorAll('input[name="pinturaInterna"]').forEach(radio => {
+            radio.addEventListener("change", function () {
+                const grupo = document.getElementById("casoGlpiPinturaGrupo");
+                const campo = document.getElementById("casoGlpiPintura");
+
+                if (this.value === "NO") {
+                    grupo.classList.remove("oculto");
+                    campo.required = true;
+                } else {
+                    grupo.classList.add("oculto");
+                    campo.required = false;
+                    campo.value = "";
+                }
+            });
+        });
+
+        // =====================================================
+        // NIVEL DE LIMPIEZA
+        // Muestra la definición según la opción seleccionada
+        // =====================================================
+
+        const definicionesLimpieza = {
+            "PÉSIMO": "1 - PÉSIMO: La limpieza es inadecuada; hay suciedad visible y falta de higiene generalizada.",
+            "DEFICIENTE": "2 - DEFICIENTE: La limpieza es insuficiente; algunas áreas están sucias o desorganizadas.",
+            "REGULAR": "3 - REGULAR: La limpieza es aceptable, pero hay detalles que podrían mejorarse; algunas áreas no se ven impecables.",
+            "BUENO": "4 - BUENO: La tienda está mayormente limpia, solo hay pequeños detalles que requieren atención.",
+            "EXCELENTE": "5 - EXCELENTE: La limpieza es impecable; todas las áreas están bien mantenidas y en perfecto estado."
+        };
+
+        document.querySelectorAll('input[name="nivelLimpieza"]').forEach(radio => {
+            radio.addEventListener("change", function () {
+                const descripcion = document.getElementById("descripcionLimpieza");
+
+                descripcion.textContent = definicionesLimpieza[this.value];
+                descripcion.classList.remove("oculto");
+            });
+        });
+
+        // =====================================================
+        // VALIDACIÓN DE IMÁGENES
+        // Permite máximo 10 MB en fotos
+        // =====================================================
+
+        document.querySelectorAll('input[type="file"][accept="image/*"]').forEach(input => {
+            input.addEventListener("change", function () {
+                const archivo = this.files[0];
+
+                if (!archivo) return;
+
+                const maximoMB = 10;
+                const maximoBytes = maximoMB * 1024 * 1024;
+
+                if (archivo.size > maximoBytes) {
+                    alert("La imagen no debe superar los 10 MB.");
+                    this.value = "";
+                }
+            });
+        });
+        /*
+            Esta parte se ejecuta cuando se presiona el botón Guardar.
+            Primero revisa que los campos obligatorios estén llenos.
+            Si todo está correcto, muestra un mensaje.
+            Por ahora no guarda en base de datos.
+        */
+        document.getElementById("formAuditoria").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            if (!this.checkValidity()) {
+                this.reportValidity();
+                return;
+            }
+
+            alert("Formulario guardado correctamente. Luego conectamos esto a base de datos o Google Sheets.");
+        });
+
+    </script>
+
+</body>
+</html>
