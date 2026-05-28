@@ -526,37 +526,43 @@
                         <input type="text" id="casoGlpiPintura" name="casoGlpiPintura" placeholder="INGRESE EL NÚMERO DE CASO GLPI">
                     </div>
 
-                    <div class="foto-acciones">
+                    <!-- FOTO DEL INTERIOR DE LA TIENDA -->
+                    <div class="grupo">
+                        <label>Adjunte una foto del interior de la tienda con el mayor detalle posible <span>*</span></label>
+                        <p class="ayuda">Sube 1 archivo compatible: imagen. El tamaño máximo es de 10 MB.</p>
 
-                        <!-- BOTÓN PARA TOMAR FOTO DESDE EL CELULAR -->
-                        <button type="button" class="btn-foto" onclick="document.getElementById('tomarFotoInterior').click()">
-                            Tomar foto
-                        </button>
+                        <div class="foto-acciones">
 
-                        <input 
-                            type="file" 
-                            id="tomarFotoInterior"
-                            name="tomarFotoInterior" 
-                            accept="image/*" 
-                            capture="environment"
-                            class="input-foto-oculto"
-                        >
+                            <!-- BOTÓN PARA TOMAR FOTO DESDE EL CELULAR -->
+                            <button type="button" class="btn-foto" onclick="document.getElementById('tomarFotoInterior').click()">
+                                Tomar foto
+                            </button>
 
-                        <!-- BOTÓN PARA SUBIR FOTO DESDE GALERÍA O ARCHIVO -->
-                        <button type="button" class="btn-foto" onclick="document.getElementById('subirFotoInterior').click()">
-                            Subir foto
-                        </button>
+                            <input 
+                                type="file" 
+                                id="tomarFotoInterior"
+                                name="tomarFotoInterior" 
+                                accept="image/*" 
+                                capture="environment"
+                                class="input-foto-oculto"
+                            >
 
-                        <input 
-                            type="file" 
-                            id="subirFotoInterior"
-                            name="subirFotoInterior" 
-                            accept="image/*"
-                            class="input-foto-oculto"
-                        >
+                            <!-- BOTÓN PARA SUBIR FOTO DESDE GALERÍA O ARCHIVO -->
+                            <button type="button" class="btn-foto" onclick="document.getElementById('subirFotoInterior').click()">
+                                Subir foto
+                            </button>
 
-                        <span id="nombreFotoInterior" class="nombre-archivo">Ningún archivo seleccionado</span>
+                            <input 
+                                type="file" 
+                                id="subirFotoInterior"
+                                name="subirFotoInterior" 
+                                accept="image/*"
+                                class="input-foto-oculto"
+                            >
 
+                            <span id="nombreFotoInterior" class="nombre-archivo">Ningún archivo seleccionado</span>
+
+                        </div>
                     </div>
 
                     <div class="grupo">
@@ -571,7 +577,38 @@
                     <div class="grupo">
                         <label>Por favor adjunte una fotografía de la fachada de la tienda <span>*</span></label>
                         <p class="ayuda">Sube 1 archivo compatible: imagen. El tamaño máximo es de 10 MB.</p>
-                        <input type="file" name="fotoFachadaTienda" accept="image/*" required>
+
+                        <div class="foto-acciones">
+
+                            <!-- Botón para tomar foto desde celular -->
+                            <button type="button" class="btn-foto" onclick="document.getElementById('tomarFotoFachada').click()">
+                                Tomar foto
+                            </button>
+
+                            <input 
+                                type="file" 
+                                id="tomarFotoFachada"
+                                name="tomarFotoFachada" 
+                                accept="image/*" 
+                                capture="environment"
+                                class="input-foto-oculto"
+                            >
+
+                            <!-- Botón para subir foto desde galería o archivo -->
+                            <button type="button" class="btn-foto" onclick="document.getElementById('subirFotoFachada').click()">
+                                Subir foto
+                            </button>
+
+                            <input 
+                                type="file" 
+                                id="subirFotoFachada"
+                                name="subirFotoFachada" 
+                                accept="image/*"
+                                class="input-foto-oculto"
+                            >
+
+                            <span id="nombreFotoFachada" class="nombre-archivo">Ningún archivo seleccionado</span>
+                        </div>
                     </div>
 
                     <div class="grupo">
@@ -1293,9 +1330,41 @@
         // Sirve para los dos botones: Tomar foto y Subir foto.
         // =====================================================
 
-        const tomarFotoInterior = document.getElementById("tomarFotoInterior");
-        const subirFotoInterior = document.getElementById("subirFotoInterior");
-        const nombreFotoInterior = document.getElementById("nombreFotoInterior");
+// =====================================================
+// Muestra el nombre de la foto tomada o subida.
+// Aplica para foto interior y foto de fachada.
+// =====================================================
+
+        function configurarNombreFoto(idTomar, idSubir, idTexto) {
+            const inputTomar = document.getElementById(idTomar);
+            const inputSubir = document.getElementById(idSubir);
+            const textoNombre = document.getElementById(idTexto);
+
+            function mostrarNombre(input) {
+                if (!textoNombre) return;
+
+                if (input.files.length > 0) {
+                    textoNombre.textContent = input.files[0].name;
+                } else {
+                    textoNombre.textContent = "Ningún archivo seleccionado";
+                }
+            }
+
+            if (inputTomar) {
+                inputTomar.addEventListener("change", function () {
+                    mostrarNombre(this);
+                });
+            }
+
+            if (inputSubir) {
+                inputSubir.addEventListener("change", function () {
+                    mostrarNombre(this);
+                });
+            }
+        }
+
+        configurarNombreFoto("tomarFotoInterior", "subirFotoInterior", "nombreFotoInterior");
+        configurarNombreFoto("tomarFotoFachada", "subirFotoFachada", "nombreFotoFachada");
 
         function mostrarNombreFoto(input) {
             if (!nombreFotoInterior) return;
@@ -1319,6 +1388,59 @@
             });
         }
 
+        // =====================================================
+        // Valida que se haya tomado o subido una foto.
+        // Como hay dos botones, se revisa que al menos uno tenga archivo.
+        // =====================================================
+
+        function validarGrupoFotos(idTomar, idSubir, mensaje) {
+            const inputTomar = document.getElementById(idTomar);
+            const inputSubir = document.getElementById(idSubir);
+
+            const tieneFotoTomada = inputTomar && inputTomar.files.length > 0;
+            const tieneFotoSubida = inputSubir && inputSubir.files.length > 0;
+
+            // Si los campos están ocultos o deshabilitados, no se validan.
+            if (
+                (inputTomar && inputTomar.disabled) ||
+                (inputTomar && inputTomar.closest(".oculto"))
+            ) {
+                return true;
+            }
+
+            if (!tieneFotoTomada && !tieneFotoSubida) {
+                alert(mensaje);
+
+                if (inputTomar) {
+                    inputTomar.click();
+                }
+
+                return false;
+            }
+
+            return true;
+        }
+
+        function validarFotosObligatorias() {
+            const fotoInteriorCorrecta = validarGrupoFotos(
+                "tomarFotoInterior",
+                "subirFotoInterior",
+                "Debe tomar o subir una foto del interior de la tienda."
+            );
+
+            if (!fotoInteriorCorrecta) return false;
+
+            const fotoFachadaCorrecta = validarGrupoFotos(
+                "tomarFotoFachada",
+                "subirFotoFachada",
+                "Debe tomar o subir una foto de la fachada de la tienda."
+            );
+
+            if (!fotoFachadaCorrecta) return false;
+
+            return true;
+        }
+
         /*
             Esta parte se ejecuta cuando se presiona el botón Guardar.
             Primero revisa que los campos obligatorios estén llenos.
@@ -1329,6 +1451,10 @@
             e.preventDefault();
 
             if (!validarCedulas()) {
+                return;
+            }
+
+            if (!validarFotosObligatorias()) {
                 return;
             }
 
