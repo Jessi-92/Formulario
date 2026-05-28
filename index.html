@@ -899,11 +899,12 @@
             });
         }
 
-        // Esta función aplica las reglas dependiendo de si es bodega o tienda normal.
-// =====================================================
-// Aplica reglas especiales si la tienda seleccionada es bodega.
-// Si NO es bodega, el formulario se mantiene normal.
-// =====================================================
+        // =====================================================
+        // Aplica reglas especiales según la tienda seleccionada.
+        // Si la tienda es bodega, SOLO se ocultan las secciones
+        // que no aplican para bodega.
+        // Todo lo demás se mantiene visible.
+        // =====================================================
         function aplicarVistaPorTienda() {
             const esBodega = esBodegaSeleccionada();
 
@@ -911,28 +912,48 @@
             console.log("¿Es bodega?:", esBodega);
 
             if (esBodega) {
-                mostrarUOcultarSeccion("seccionValidacionTienda", false);
-                mostrarUOcultarSeccion("seccionPermisos", false);
-                mostrarUOcultarSeccion("seccionEstadoTiendaNormal", false);
-                mostrarUOcultarSeccion("seccionCedulasTerceros", false);
-                mostrarUOcultarSeccion("seccionCuadreCaja", false);
+                // =====================================================
+                // PARA BODEGAS
+                // SOLO OCULTAR ESTAS SECCIONES
+                // =====================================================
 
+                // No aplica validación de tienda:
+                // uniforme y letrero del counter.
+                mostrarUOcultarSeccion("seccionValidacionTienda", false);
+
+                // No aplica revisión de permisos de funcionamiento.
+                mostrarUOcultarSeccion("seccionPermisos", false);
+
+                // No aplica validación de cédulas de terceros.
+                mostrarUOcultarSeccion("seccionCedulasTerceros", false);
+
+                // =====================================================
+                // PARA BODEGAS, TODO ESTO SÍ DEBE MOSTRARSE
+                // =====================================================
+
+                mostrarUOcultarSeccion("seccionCuadreCaja", true);
+                mostrarUOcultarSeccion("seccionEstadoTiendaNormal", true);
                 mostrarUOcultarSeccion("seccionLimpiezaTienda", true);
                 mostrarUOcultarSeccion("seccionCuadreInventario", true);
 
             } else {
+                // =====================================================
+                // PARA TIENDAS NORMALES
+                // SE MUESTRA TODO
+                // =====================================================
+
                 mostrarUOcultarSeccion("seccionValidacionTienda", true);
                 mostrarUOcultarSeccion("seccionPermisos", true);
-                mostrarUOcultarSeccion("seccionEstadoTiendaNormal", true);
                 mostrarUOcultarSeccion("seccionCedulasTerceros", true);
+
                 mostrarUOcultarSeccion("seccionCuadreCaja", true);
+                mostrarUOcultarSeccion("seccionEstadoTiendaNormal", true);
                 mostrarUOcultarSeccion("seccionLimpiezaTienda", true);
                 mostrarUOcultarSeccion("seccionCuadreInventario", true);
             }
 
             aplicarReglaCuadreInventario();
         }
-
 
         const numeroAuditoresSelect = document.getElementById("numeroAuditores");
         const contenedorAuditores = document.getElementById("contenedorAuditores");
