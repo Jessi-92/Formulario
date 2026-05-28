@@ -526,26 +526,37 @@
                         <input type="text" id="casoGlpiPintura" name="casoGlpiPintura" placeholder="INGRESE EL NÚMERO DE CASO GLPI">
                     </div>
 
-                    <div class="grupo">
-                        <label>Adjunte una foto del interior de la tienda con el mayor detalle posible <span>*</span></label>
-                        <p class="ayuda">Sube 1 archivo compatible: imagen. El tamaño máximo es de 10 MB.</p>
-                        <div class="foto-acciones">
-                        <button type="button" class="btn-foto" onclick="document.getElementById('fotoInteriorTienda').click()">
-                            Tomar o subir foto
-                        </button>
+                    <div class="foto-acciones">
 
-                        <span id="nombreFotoInterior" class="nombre-archivo">Ningún archivo seleccionado</span>
+                        <!-- BOTÓN PARA TOMAR FOTO DESDE EL CELULAR -->
+                        <button type="button" class="btn-foto" onclick="document.getElementById('tomarFotoInterior').click()">
+                            Tomar foto
+                        </button>
 
                         <input 
                             type="file" 
-                            id="fotoInteriorTienda"
-                            name="fotoInteriorTienda" 
+                            id="tomarFotoInterior"
+                            name="tomarFotoInterior" 
                             accept="image/*" 
                             capture="environment"
-                            required
                             class="input-foto-oculto"
                         >
-                    </div>
+
+                        <!-- BOTÓN PARA SUBIR FOTO DESDE GALERÍA O ARCHIVO -->
+                        <button type="button" class="btn-foto" onclick="document.getElementById('subirFotoInterior').click()">
+                            Subir foto
+                        </button>
+
+                        <input 
+                            type="file" 
+                            id="subirFotoInterior"
+                            name="subirFotoInterior" 
+                            accept="image/*"
+                            class="input-foto-oculto"
+                        >
+
+                        <span id="nombreFotoInterior" class="nombre-archivo">Ningún archivo seleccionado</span>
+
                     </div>
 
                     <div class="grupo">
@@ -1278,22 +1289,35 @@
             return true;
         }
         // =====================================================
-        // Muestra el nombre de la foto interior seleccionada.
+        // Muestra el nombre de la foto tomada o subida.
+        // Sirve para los dos botones: Tomar foto y Subir foto.
         // =====================================================
-        const fotoInterior = document.getElementById("fotoInteriorTienda");
 
-        if (fotoInterior) {
-            fotoInterior.addEventListener("change", function () {
-                const nombre = document.getElementById("nombreFotoInterior");
+        const tomarFotoInterior = document.getElementById("tomarFotoInterior");
+        const subirFotoInterior = document.getElementById("subirFotoInterior");
+        const nombreFotoInterior = document.getElementById("nombreFotoInterior");
 
-                if (this.files.length > 0) {
-                    nombre.textContent = this.files[0].name;
-                } else {
-                    nombre.textContent = "Ningún archivo seleccionado";
-                }
+        function mostrarNombreFoto(input) {
+            if (!nombreFotoInterior) return;
+
+            if (input.files.length > 0) {
+                nombreFotoInterior.textContent = input.files[0].name;
+            } else {
+                nombreFotoInterior.textContent = "Ningún archivo seleccionado";
+            }
+        }
+
+        if (tomarFotoInterior) {
+            tomarFotoInterior.addEventListener("change", function () {
+                mostrarNombreFoto(this);
             });
         }
 
+        if (subirFotoInterior) {
+            subirFotoInterior.addEventListener("change", function () {
+                mostrarNombreFoto(this);
+            });
+        }
 
         /*
             Esta parte se ejecuta cuando se presiona el botón Guardar.
