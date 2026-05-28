@@ -802,6 +802,11 @@
         // Esta función oculta o muestra una sección completa.
         // También desactiva el required de los campos ocultos,
         // para que el formulario no pida llenar preguntas que no se ven.
+        // =====================================================
+// Muestra u oculta una sección.
+// Cuando se oculta, se desactivan sus campos para que no pidan validación.
+// Cuando se muestra, se vuelven a activar.
+// =====================================================
         function mostrarUOcultarSeccion(idSeccion, mostrar) {
             const seccion = document.getElementById(idSeccion);
 
@@ -816,19 +821,19 @@
             const campos = seccion.querySelectorAll("input, select, textarea");
 
             campos.forEach(campo => {
-                if (!campo.dataset.requiredOriginal) {
+                if (campo.dataset.requiredOriginal === undefined) {
                     campo.dataset.requiredOriginal = campo.required ? "SI" : "NO";
                 }
 
                 if (mostrar) {
+                    campo.disabled = false;
                     campo.required = campo.dataset.requiredOriginal === "SI";
                 } else {
                     campo.required = false;
+                    campo.disabled = true;
 
                     if (campo.type === "radio" || campo.type === "checkbox") {
                         campo.checked = false;
-                    } else if (campo.type === "file") {
-                        campo.value = "";
                     } else {
                         campo.value = "";
                     }
@@ -837,28 +842,31 @@
         }
 
         // Esta función aplica las reglas dependiendo de si es bodega o tienda normal.
+// =====================================================
+// Aplica reglas especiales si la tienda seleccionada es bodega.
+// Si NO es bodega, el formulario se mantiene normal.
+// =====================================================
         function aplicarVistaPorTienda() {
             const esBodega = esBodegaSeleccionada();
 
             if (esBodega) {
-                // Para bodegas NO se muestra permisos.
+                // Para bodegas se oculta permisos.
                 mostrarUOcultarSeccion("seccionPermisos", false);
 
-                // Para bodegas NO se muestra el estado completo de tienda.
+                // Para bodegas se oculta estado normal de tienda.
                 mostrarUOcultarSeccion("seccionEstadoTiendaNormal", false);
 
-                // Para bodegas SÍ se muestra limpieza.
+                // Para bodegas sí se muestra limpieza.
                 mostrarUOcultarSeccion("seccionLimpiezaTienda", true);
 
-                // Para bodegas NO se muestra validación de cédulas.
+                // Para bodegas se oculta validación de cédulas de terceros.
                 mostrarUOcultarSeccion("seccionCedulasTerceros", false);
 
-                // Para bodegas NO se muestra cuadre de caja.
+                // Para bodegas se oculta cuadre de caja.
                 mostrarUOcultarSeccion("seccionCuadreCaja", false);
 
-                // Para bodegas SÍ se muestra cuadre de inventario.
+                // Para bodegas sí se muestra inventario.
                 mostrarUOcultarSeccion("seccionCuadreInventario", true);
-
             } else {
                 // Para tiendas normales se muestra todo.
                 mostrarUOcultarSeccion("seccionPermisos", true);
@@ -868,6 +876,8 @@
                 mostrarUOcultarSeccion("seccionCuadreCaja", true);
                 mostrarUOcultarSeccion("seccionCuadreInventario", true);
             }
+
+            aplicarReglaCuadreInventario();
         }
 
 
@@ -1025,6 +1035,10 @@
             Según la cantidad de artículos faltantes,
             se crea una tabla con la misma cantidad de filas.
         */
+// =====================================================
+// Crea la tabla según la cantidad de artículos faltantes.
+// También calcula automáticamente DIF = CANT FÍSICO - CANT KARDEX.
+// =====================================================
         cantidadFaltantes.addEventListener("input", function () {
             const cantidad = parseInt(this.value) || 0;
 
@@ -1043,14 +1057,79 @@
                 fila.innerHTML = `
                     <td><input type="text" name="codigoFaltante${i}" required></td>
                     <td><input type="text" name="descripcionFaltante${i}" required></td>
-                    <td><input type="number" name="cantKardex${i}" min="0" required></td>
-                    <td><input type="number" name="cantFisico${i}" min="0" required></td>
-                    <td><input type="number" name="(cantFisico${i}-cantKardex${i}) " required></td>
+                    <td><input type="number" name="cantKardex${i}" id="cantKardex${i}" min="0" required></td>
+                    <td><input type="number" name="cantFisico${i}" id="cantFisico${i}" min="0" required></td>
+                    <td><input type="number" name="diferencia${i}" id="diferencia${i}" readonly required></td>
                     <td><input type="text" name="numeroGlp${i}" required></td>
                 `;
 
                 tablaFaltantesBody.appendChild(fila);
+
+                const cantKardex = document.getElementById(`cantKardex${i}`);
+                const cantFisico = document.getElementById(`cantFisico${i}`);
+                const diferencia = document.getElementById(`diferencia${i}`);
+
+                function calcularDiferencia() {
+                    const kardex = parseFloat(cantKardex.value) || 0;
+                    const fisico = parseFloat(cantFisico.value) || 0;
+
+                    diferencia.value = fisico - kardex;
+                }
+
+                cantKardex.addEventListener("input", calcularDiferencia);
+                cantFisico.addEventListener("input", calcularDiferencia);
             }
+        });
+
+        // =====================================================
+        // Si el inventario SÍ cuadró, no se muestran faltantes.
+        // Solo si dice NO CUADRÓ EL INVENTARIO se muestran:
+        // - cantidad de artículos faltantes
+        // - tabla de detalle
+        // - valor de factura o acta de descuento
+        // =====================================================
+        function aplicarReglaCuadreInventario() {
+            const opcionSeleccionada = document.querySelector('input[name="cuadreInventario"]:checked');
+            const cantidadGrupo = document.getElementById("cantidadFaltantesGrupo");
+            const tablaGrupo = document.getElementById("tablaFaltantesGrupo");
+            const valorGrupo = document.getElementById("valorFacturaActaGrupo");
+            const cantidadInput = document.getElementById("cantidadFaltantes");
+            const valorInput = document.getElementById("valorFacturaActa");
+
+            if (!opcionSeleccionada) {
+                cantidadGrupo.classList.add("oculto");
+                tablaGrupo.classList.add("oculto");
+                valorGrupo.classList.add("oculto");
+
+                cantidadInput.required = false;
+                valorInput.required = false;
+                return;
+            }
+
+            if (opcionSeleccionada.value === "NO CUADRÓ EL INVENTARIO") {
+                cantidadGrupo.classList.remove("oculto");
+                valorGrupo.classList.remove("oculto");
+
+                cantidadInput.required = true;
+                valorInput.required = true;
+
+                cantidadFaltantes.dispatchEvent(new Event("input"));
+            } else {
+                cantidadGrupo.classList.add("oculto");
+                tablaGrupo.classList.add("oculto");
+                valorGrupo.classList.add("oculto");
+
+                cantidadInput.required = false;
+                valorInput.required = false;
+
+                cantidadInput.value = "1";
+                valorInput.value = "";
+                tablaFaltantesBody.innerHTML = "";
+            }
+        }
+
+        document.querySelectorAll('input[name="cuadreInventario"]').forEach(radio => {
+            radio.addEventListener("change", aplicarReglaCuadreInventario);
         });
 
                 // =====================================================
@@ -1058,16 +1137,32 @@
         // Al dar clic muestra la segunda parte del formulario
         // =====================================================
 
+        // =====================================================
+        // BOTÓN SIGUIENTE
+        // Antes de pasar a la segunda parte, valida que la primera
+        // parte visible esté completa.
+        // =====================================================
         document.getElementById("btnSiguiente").addEventListener("click", function () {
-
+            const form = document.getElementById("formAuditoria");
             const segundaParte = document.getElementById("segundaParte");
             const btnGuardar = document.getElementById("btnGuardar");
-            
+
+            const camposPrimeraParte = [...form.querySelectorAll("input, select, textarea")]
+                .filter(campo => !campo.closest("#segundaParte"))
+                .filter(campo => !campo.closest(".oculto"))
+                .filter(campo => !campo.disabled);
+
+            for (const campo of camposPrimeraParte) {
+                if (!campo.checkValidity()) {
+                    campo.reportValidity();
+                    campo.focus();
+                    return;
+                }
+            }
+
             segundaParte.classList.remove("oculto");
             btnGuardar.classList.remove("oculto");
 
-            // Aplica la vista según la tienda seleccionada.
-            // Si es bodega, oculta permisos, estado normal, cédulas y caja.
             aplicarVistaPorTienda();
 
             this.classList.add("oculto");
@@ -1160,6 +1255,46 @@
                 }
             });
         });
+
+        // =====================================================
+        // Valida que todas las cédulas tengan exactamente 10 dígitos.
+        // Aplica para vendedor y auditores.
+        // =====================================================
+        function validarCedulas() {
+            const cedulas = document.querySelectorAll(".campo-cedula");
+
+            for (const cedula of cedulas) {
+                if (cedula.disabled || cedula.closest(".oculto")) continue;
+
+                const valor = cedula.value.trim();
+
+                if (!/^[0-9]{10}$/.test(valor)) {
+                    alert("La cédula debe tener exactamente 10 dígitos numéricos.");
+                    cedula.focus();
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        // =====================================================
+        // Muestra el nombre de la foto interior seleccionada.
+        // =====================================================
+        const fotoInterior = document.getElementById("fotoInteriorTienda");
+
+        if (fotoInterior) {
+            fotoInterior.addEventListener("change", function () {
+                const nombre = document.getElementById("nombreFotoInterior");
+
+                if (this.files.length > 0) {
+                    nombre.textContent = this.files[0].name;
+                } else {
+                    nombre.textContent = "Ningún archivo seleccionado";
+                }
+            });
+        }
+
+
         /*
             Esta parte se ejecuta cuando se presiona el botón Guardar.
             Primero revisa que los campos obligatorios estén llenos.
@@ -1168,6 +1303,10 @@
         */
         document.getElementById("formAuditoria").addEventListener("submit", function (e) {
             e.preventDefault();
+
+            if (!validarCedulas()) {
+                return;
+            }
 
             if (!this.checkValidity()) {
                 this.reportValidity();
