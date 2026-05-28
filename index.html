@@ -901,9 +901,8 @@
 
         // =====================================================
         // Aplica reglas especiales según la tienda seleccionada.
-        // Si la tienda es bodega, SOLO se ocultan las secciones
-        // que no aplican para bodega.
-        // Todo lo demás se mantiene visible.
+        // Si la tienda es bodega, se ocultan SOLO las secciones
+        // que no aplican para bodegas.
         // =====================================================
         function aplicarVistaPorTienda() {
             const esBodega = esBodegaSeleccionada();
@@ -913,43 +912,47 @@
 
             if (esBodega) {
                 // =====================================================
-                // PARA BODEGAS
-                // SOLO OCULTAR ESTAS SECCIONES
+                // PARA BODEGAS: OCULTAR
                 // =====================================================
 
-                // No aplica validación de tienda:
+                // Oculta VALIDACIÓN DE TIENDA:
                 // uniforme y letrero del counter.
                 mostrarUOcultarSeccion("seccionValidacionTienda", false);
 
-                // No aplica revisión de permisos de funcionamiento.
+                // Oculta REVISIÓN PERMISOS DE FUNCIONAMIENTO.
                 mostrarUOcultarSeccion("seccionPermisos", false);
 
-                // No aplica validación de cédulas de terceros.
-                mostrarUOcultarSeccion("seccionCedulasTerceros", false);
-
+                // Oculta ESTADO NORMAL DE LA TIENDA:
+                // dispositivos, TV, volantes, WhatsApp, pintura,
+                // fotos, letrero externo e iluminación.
                 mostrarUOcultarSeccion("seccionEstadoTiendaNormal", false);
 
+                // Oculta VALIDACIÓN DE CÉDULAS DE TERCEROS.
+                mostrarUOcultarSeccion("seccionCedulasTerceros", false);
+
                 // =====================================================
-                // PARA BODEGAS, TODO ESTO SÍ DEBE MOSTRARSE
+                // PARA BODEGAS: MOSTRAR
                 // =====================================================
 
+                // Sí se muestra CUADRE DE CAJA.
                 mostrarUOcultarSeccion("seccionCuadreCaja", true);
-                mostrarUOcultarSeccion("seccionEstadoTiendaNormal", true);
+
+                // Sí se muestra LIMPIEZA.
                 mostrarUOcultarSeccion("seccionLimpiezaTienda", true);
+
+                // Sí se muestra CUADRE DE INVENTARIO.
                 mostrarUOcultarSeccion("seccionCuadreInventario", true);
 
             } else {
                 // =====================================================
-                // PARA TIENDAS NORMALES
-                // SE MUESTRA TODO
+                // PARA TIENDAS NORMALES: MOSTRAR TODO
                 // =====================================================
 
                 mostrarUOcultarSeccion("seccionValidacionTienda", true);
                 mostrarUOcultarSeccion("seccionPermisos", true);
-                mostrarUOcultarSeccion("seccionCedulasTerceros", true);
-
-                mostrarUOcultarSeccion("seccionCuadreCaja", true);
                 mostrarUOcultarSeccion("seccionEstadoTiendaNormal", true);
+                mostrarUOcultarSeccion("seccionCedulasTerceros", true);
+                mostrarUOcultarSeccion("seccionCuadreCaja", true);
                 mostrarUOcultarSeccion("seccionLimpiezaTienda", true);
                 mostrarUOcultarSeccion("seccionCuadreInventario", true);
             }
