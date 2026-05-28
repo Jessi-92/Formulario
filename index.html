@@ -844,9 +844,17 @@
             "BODEGA MATRIZ GYE"
         ];
 
-        // Esta función revisa si la tienda seleccionada es una bodega.
+        // =====================================================
+        // Revisa si la tienda seleccionada es una bodega.
+        // Se usa trim() y toUpperCase() para evitar errores
+        // por espacios o diferencias de mayúsculas/minúsculas.
+        // =====================================================
         function esBodegaSeleccionada() {
-            return bodegasEspeciales.includes(tiendaSelect.value);
+            const tiendaSeleccionada = tiendaSelect.value.trim().toUpperCase();
+
+            return bodegasEspeciales.some(bodega => 
+                bodega.trim().toUpperCase() === tiendaSeleccionada
+            );
         }
 
         // Esta función oculta o muestra una sección completa.
@@ -899,40 +907,31 @@
         function aplicarVistaPorTienda() {
             const esBodega = esBodegaSeleccionada();
 
+            console.log("Tienda seleccionada:", tiendaSelect.value);
+            console.log("¿Es bodega?:", esBodega);
+
             if (esBodega) {
-                // Para bodegas se oculta permisos.
+                mostrarUOcultarSeccion("seccionValidacionTienda", false);
                 mostrarUOcultarSeccion("seccionPermisos", false);
-
-                // Para bodegas se oculta estado normal de tienda.
                 mostrarUOcultarSeccion("seccionEstadoTiendaNormal", false);
-
-                // Para bodegas sí se muestra limpieza.
-                mostrarUOcultarSeccion("seccionLimpiezaTienda", true);
-
-                // Para bodegas se oculta validación de cédulas de terceros.
                 mostrarUOcultarSeccion("seccionCedulasTerceros", false);
-
-                // Para bodegas se oculta cuadre de caja.
                 mostrarUOcultarSeccion("seccionCuadreCaja", false);
 
-                mostrarUOcultarSeccion("seccionValidacionTienda", false);
-
-                // Para bodegas sí se muestra inventario.
+                mostrarUOcultarSeccion("seccionLimpiezaTienda", true);
                 mostrarUOcultarSeccion("seccionCuadreInventario", true);
+
             } else {
-                // Para tiendas normales se muestra todo.
+                mostrarUOcultarSeccion("seccionValidacionTienda", true);
                 mostrarUOcultarSeccion("seccionPermisos", true);
                 mostrarUOcultarSeccion("seccionEstadoTiendaNormal", true);
-                mostrarUOcultarSeccion("seccionLimpiezaTienda", true);
                 mostrarUOcultarSeccion("seccionCedulasTerceros", true);
                 mostrarUOcultarSeccion("seccionCuadreCaja", true);
+                mostrarUOcultarSeccion("seccionLimpiezaTienda", true);
                 mostrarUOcultarSeccion("seccionCuadreInventario", true);
-                mostrarUOcultarSeccion("seccionValidacionTienda", true);
             }
 
             aplicarReglaCuadreInventario();
         }
-
 
 
         const numeroAuditoresSelect = document.getElementById("numeroAuditores");
