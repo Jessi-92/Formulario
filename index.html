@@ -150,47 +150,49 @@
             <!-- ===================================================== -->
             <!-- SECCIÓN 3: VALIDACIÓN DE TIENDA -->
             <!-- ===================================================== -->
+            <div id="seccionValidacionTienda">
 
-            <h2>VALIDACIÓN DE TIENDA</h2>
+                <h2>VALIDACIÓN DE TIENDA</h2>
 
-            <!-- 
-                Pregunta sobre uniforme.
-                Si el usuario responde NO, se muestra un campo para explicar el motivo.
-            -->
-            <div class="grupo">
-                <label>¿El personal en tiendas está uniformado? <span>*</span></label>
+                <!-- 
+                    Pregunta sobre uniforme.
+                    Si el usuario responde NO, se muestra un campo para explicar el motivo.
+                -->
+                <div class="grupo">
+                    <label>¿El personal en tiendas está uniformado? <span>*</span></label>
 
-                <div class="opciones vertical">
-                    <label><input type="radio" name="personalUniformado" value="SI" required> SI</label>
-                    <label><input type="radio" name="personalUniformado" value="NO"> NO</label>
-                </div>
-            </div>
-
-            <!-- 
-                Este campo está oculto al inicio.
-                Solo aparece cuando se responde NO en la pregunta anterior.
-            -->
-            <div class="grupo oculto" id="motivoUniformeGrupo">
-                <label>En caso de que la anterior pregunta sea "NO". ¿Por qué razón no está uniformado? <span>*</span></label>
-                <textarea id="motivoUniforme" name="motivoUniforme" rows="4" placeholder="INGRESE EL MOTIVO"></textarea>
-            </div>
-
-            <!-- Pregunta sobre el letrero visible en tienda -->
-            <div class="grupo">
-                <label>
-                    ¿Se encuentra en el counter o cerca del counter visible el letrero en la tienda,
-                    sin modificaciones ni partes que estén tachadas o remarcadas?
-                </label>
-
-                <div class="imagen-ejemplo">
-                    <img src="img/letreroEjm.png" alt="Ejemplo letrero en tienda">
+                    <div class="opciones vertical">
+                        <label><input type="radio" name="personalUniformado" value="SI" required> SI</label>
+                        <label><input type="radio" name="personalUniformado" value="NO"> NO</label>
+                    </div>
                 </div>
 
-                <div class="opciones vertical">
-                    <label><input type="radio" name="letreroVisible" value="SI" required> SI</label>
-                    <label><input type="radio" name="letreroVisible" value="NO"> NO</label>
+                <!-- 
+                    Este campo está oculto al inicio.
+                    Solo aparece cuando se responde NO en la pregunta anterior.
+                -->
+                <div class="grupo oculto" id="motivoUniformeGrupo">
+                    <label>En caso de que la anterior pregunta sea "NO". ¿Por qué razón no está uniformado? <span>*</span></label>
+                    <textarea id="motivoUniforme" name="motivoUniforme" rows="4" placeholder="INGRESE EL MOTIVO"></textarea>
                 </div>
 
+                <!-- Pregunta sobre el letrero visible en tienda -->
+                <div class="grupo">
+                    <label>
+                        ¿Se encuentra en el counter o cerca del counter visible el letrero en la tienda,
+                        sin modificaciones ni partes que estén tachadas o remarcadas?
+                    </label>
+
+                    <div class="imagen-ejemplo">
+                        <img src="img/letreroEjm.png" alt="Ejemplo letrero en tienda">
+                    </div>
+
+                    <div class="opciones vertical">
+                        <label><input type="radio" name="letreroVisible" value="SI" required> SI</label>
+                        <label><input type="radio" name="letreroVisible" value="NO"> NO</label>
+                    </div>
+
+                </div>
             </div>
 
             <!-- ===================================================== -->
