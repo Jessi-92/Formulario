@@ -997,8 +997,14 @@
 
         // =====================================================
         // Aplica reglas especiales según la tienda seleccionada.
-        // Si la tienda es bodega, se ocultan SOLO las secciones
-        // que no aplican para bodegas.
+        // Si es bodega, se ocultan las secciones que no aplican.
+        // Para bodegas NO debe salir:
+        // - Validación de tienda
+        // - Cuadre de caja
+        // - Revisión de permisos
+        // - Estado normal de tienda
+        // - Cédulas de terceros
+        // - Seguridad en tiendas
         // =====================================================
         function aplicarVistaPorTienda() {
             const esBodega = esBodegaSeleccionada();
@@ -1011,55 +1017,36 @@
                 // PARA BODEGAS: OCULTAR
                 // =====================================================
 
-                // Oculta VALIDACIÓN DE TIENDA:
-                // uniforme y letrero del counter.
                 mostrarUOcultarSeccion("seccionValidacionTienda", false);
-
-                // Oculta REVISIÓN PERMISOS DE FUNCIONAMIENTO.
-                mostrarUOcultarSeccion("seccionPermisos", false);
-
-                // Oculta ESTADO NORMAL DE LA TIENDA:
-                // dispositivos, TV, volantes, WhatsApp, pintura,
-                // fotos, letrero externo e iluminación.
-                mostrarUOcultarSeccion("seccionEstadoTiendaNormal", false);
-
-                // Oculta VALIDACIÓN DE CÉDULAS DE TERCEROS.
-                mostrarUOcultarSeccion("seccionCedulasTerceros", false);
-                
-                // Ocultar CUADRE DE CAJA porque las bodegas también manejan caja
                 mostrarUOcultarSeccion("seccionCuadreCaja", false);
-
+                mostrarUOcultarSeccion("seccionPermisos", false);
+                mostrarUOcultarSeccion("seccionEstadoTiendaNormal", false);
+                mostrarUOcultarSeccion("seccionCedulasTerceros", false);
+                mostrarUOcultarSeccion("seccionSeguridadTiendas", false);
 
                 // =====================================================
                 // PARA BODEGAS: MOSTRAR
-                // ====================================================
+                // =====================================================
 
-                // Sí se muestra LIMPIEZA.
                 mostrarUOcultarSeccion("seccionLimpiezaTienda", true);
-
-                // Sí se muestra CUADRE DE INVENTARIO.
                 mostrarUOcultarSeccion("seccionCuadreInventario", true);
-                
-
-                mostrarUOcultarSeccion("seccionSeguridadTiendas", true);
-
-
 
             } else {
                 // =====================================================
-                // PARA TIENDAS NORMALES: MOSTRAR TODO
+                // PARA TIENDAS NORMALES
                 // =====================================================
 
                 mostrarUOcultarSeccion("seccionValidacionTienda", true);
+                mostrarUOcultarSeccion("seccionCuadreCaja", true);
                 mostrarUOcultarSeccion("seccionPermisos", true);
                 mostrarUOcultarSeccion("seccionEstadoTiendaNormal", true);
                 mostrarUOcultarSeccion("seccionCedulasTerceros", true);
-                mostrarUOcultarSeccion("seccionCuadreCaja", true);
                 mostrarUOcultarSeccion("seccionLimpiezaTienda", true);
                 mostrarUOcultarSeccion("seccionCuadreInventario", true);
-                // No se muestra todavía, porque aparece con el segundo Siguiente.
-                mostrarUOcultarSeccion("seccionSeguridadTiendas", true);
-                
+
+                // Seguridad NO se muestra aquí.
+                // Se muestra recién cuando se da clic en el segundo botón Siguiente.
+                mostrarUOcultarSeccion("seccionSeguridadTiendas", false);
             }
 
             aplicarReglaCuadreInventario();
@@ -1315,23 +1302,22 @@
             radio.addEventListener("change", aplicarReglaCuadreInventario);
         });
 
-                // =====================================================
-        // BOTÓN SIGUIENTE
-        // Al dar clic muestra la segunda parte del formulario
         // =====================================================
-
         // =====================================================
-        // BOTÓN SIGUIENTE
-        // Antes de pasar a la segunda parte, valida que la primera
-        // parte visible esté completa.
+        // PRIMER BOTÓN SIGUIENTE
+        // Valida la primera parte y muestra la segunda parte.
+        // Si es bodega, NO muestra seguridad y pasa directo a Guardar.
+        // Si es tienda normal, muestra el segundo botón Siguiente.
         // =====================================================
         document.getElementById("btnSiguiente").addEventListener("click", function () {
             const form = document.getElementById("formAuditoria");
             const segundaParte = document.getElementById("segundaParte");
             const btnGuardar = document.getElementById("btnGuardar");
+            const btnSiguienteSeguridad = document.getElementById("btnSiguienteSeguridad");
 
             const camposPrimeraParte = [...form.querySelectorAll("input, select, textarea")]
                 .filter(campo => !campo.closest("#segundaParte"))
+                .filter(campo => !campo.closest("#seccionSeguridadTiendas"))
                 .filter(campo => !campo.closest(".oculto"))
                 .filter(campo => !campo.disabled);
 
@@ -1344,13 +1330,66 @@
             }
 
             segundaParte.classList.remove("oculto");
-            btnGuardar.classList.remove("oculto");
 
             aplicarVistaPorTienda();
 
             this.classList.add("oculto");
 
+            if (esBodegaSeleccionada()) {
+                // Si es bodega, seguridad NO aplica.
+                // Entonces se oculta seguridad y aparece Guardar directamente.
+                mostrarUOcultarSeccion("seccionSeguridadTiendas", false);
+                btnSiguienteSeguridad.classList.add("oculto");
+                btnGuardar.classList.remove("oculto");
+            } else {
+                // Si es tienda normal, aparece el segundo botón Siguiente.
+                // Guardar todavía no aparece.
+                mostrarUOcultarSeccion("seccionSeguridadTiendas", false);
+                btnSiguienteSeguridad.classList.remove("oculto");
+                btnGuardar.classList.add("oculto");
+            }
+
             segundaParte.scrollIntoView({
+                behavior: "smooth"
+            });
+        });
+
+        // =====================================================
+        // SEGUNDO BOTÓN SIGUIENTE
+        // Solo aplica para tiendas normales.
+        // Valida la segunda parte y muestra Seguridad en Tiendas.
+        // Para bodegas nunca debe mostrarse.
+        // =====================================================
+        document.getElementById("btnSiguienteSeguridad").addEventListener("click", function () {
+            const form = document.getElementById("formAuditoria");
+            const seccionSeguridad = document.getElementById("seccionSeguridadTiendas");
+            const btnGuardar = document.getElementById("btnGuardar");
+
+            if (esBodegaSeleccionada()) {
+                mostrarUOcultarSeccion("seccionSeguridadTiendas", false);
+                this.classList.add("oculto");
+                btnGuardar.classList.remove("oculto");
+                return;
+            }
+
+            const camposSegundaParte = [...form.querySelectorAll("#segundaParte input, #segundaParte select, #segundaParte textarea")]
+                .filter(campo => !campo.closest(".oculto"))
+                .filter(campo => !campo.disabled);
+
+            for (const campo of camposSegundaParte) {
+                if (!campo.checkValidity()) {
+                    campo.reportValidity();
+                    campo.focus();
+                    return;
+                }
+            }
+
+            mostrarUOcultarSeccion("seccionSeguridadTiendas", true);
+
+            this.classList.add("oculto");
+            btnGuardar.classList.remove("oculto");
+
+            seccionSeguridad.scrollIntoView({
                 behavior: "smooth"
             });
         });
