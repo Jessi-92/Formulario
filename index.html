@@ -668,11 +668,19 @@
                     </div>
                 </div>
             </div>
+            
 
             <!-- Botones finales del formulario -->
             <div class="botones">
                 <button type="button" class="btn-secundario" id="btnSiguiente">Siguiente</button>
-                <button type="submit" class="btn-principal oculto" id="btnGuardar">Guardar</button>
+
+                <button type="button" class="btn-secundario oculto" id="btnSiguienteSeguridad">
+                    Siguiente
+                </button>
+
+                <button type="submit" class="btn-principal oculto" id="btnGuardar">
+                    Guardar
+                </button>
             </div>
 
         </form>
@@ -932,6 +940,7 @@
                 // Oculta VALIDACIÓN DE CÉDULAS DE TERCEROS.
                 mostrarUOcultarSeccion("seccionCedulasTerceros", false);
 
+
                 // =====================================================
                 // PARA BODEGAS: MOSTRAR
                 // =====================================================
@@ -945,6 +954,10 @@
                 // Sí se muestra CUADRE DE INVENTARIO.
                 mostrarUOcultarSeccion("seccionCuadreInventario", true);
 
+                mostrarUOcultarSeccion("seccionSeguridadTiendas", true);
+
+
+
             } else {
                 // =====================================================
                 // PARA TIENDAS NORMALES: MOSTRAR TODO
@@ -957,6 +970,9 @@
                 mostrarUOcultarSeccion("seccionCuadreCaja", true);
                 mostrarUOcultarSeccion("seccionLimpiezaTienda", true);
                 mostrarUOcultarSeccion("seccionCuadreInventario", true);
+                // No se muestra todavía, porque aparece con el segundo Siguiente.
+                mostrarUOcultarSeccion("seccionSeguridadTiendas", false);
+                
             }
 
             aplicarReglaCuadreInventario();
