@@ -668,7 +668,93 @@
                     </div>
                 </div>
             </div>
-            
+            <!-- ===================================================== -->
+            <!-- TERCERA PARTE: SEGURIDAD EN TIENDAS -->
+            <!-- Esta sección aparece al dar clic en el segundo botón Siguiente -->
+            <!-- Para bodegas debe permanecer oculta -->
+            <!-- ===================================================== -->
+
+            <div id="seccionSeguridadTiendas" class="oculto">
+
+                <h2>SEGURIDAD EN TIENDAS</h2>
+
+                <div class="grupo">
+                    <label>¿La puerta de la bodega se encontraba debidamente cerrada? <span>*</span></label>
+
+                    <div class="opciones vertical">
+                        <label><input type="radio" name="puertaBodegaCerrada" value="SI" required> SI</label>
+                        <label><input type="radio" name="puertaBodegaCerrada" value="NO"> NO</label>
+                        <label><input type="radio" name="puertaBodegaCerrada" value="NO APLICA"> NO APLICA</label>
+                    </div>
+                </div>
+
+                <div class="grupo">
+                    <label>¿El personal de tienda tiene el botón de pánico a la mano? <span>*</span></label>
+
+                    <p class="ayuda">
+                        Ejemplo 1: El asesor de la tienda tiene el botón de pánico a su alcance, colgado en el cuello, en el bolsillo, etc.
+                        <br>
+                        Ejemplo 2: El asesor tiene guardado el botón de pánico en los cajones, por lo tanto no está al alcance de la mano.
+                    </p>
+
+                    <div class="opciones vertical">
+                        <label><input type="radio" name="botonPanicoMano" value="SI" required> SI</label>
+                        <label><input type="radio" name="botonPanicoMano" value="NO"> NO</label>
+                        <label><input type="radio" name="botonPanicoMano" value="NO APLICA"> NO APLICA</label>
+                    </div>
+                </div>
+
+                <div class="grupo">
+                    <label>Verificar que los botones de pánico funcionen correctamente <span>*</span></label>
+
+                    <p class="ayuda">
+                        Hay que pulsar el botón de pánico y verificar que exista respuesta de consola.
+                    </p>
+
+                    <div class="opciones vertical">
+                        <label><input type="radio" name="botonPanicoFunciona" value="SI" required> SI FUNCIONA CORRECTAMENTE</label>
+                        <label><input type="radio" name="botonPanicoFunciona" value="NO"> NO FUNCIONA CORRECTAMENTE</label>
+                        <label><input type="radio" name="botonPanicoFunciona" value="NO APLICA"> NO APLICA</label>
+                    </div>
+                </div>
+
+                <div class="grupo">
+                    <label>Escriba sus comentarios o novedades <span>*</span></label>
+                    <textarea 
+                        name="comentariosSeguridad" 
+                        rows="4" 
+                        placeholder="INGRESE SUS COMENTARIOS O NOVEDADES"
+                        required
+                    ></textarea>
+                </div>
+
+                <div class="grupo">
+                    <label>¿El personal se encuentra capacitado en el uso de la caja fuerte? <span>*</span></label>
+
+                    <div class="opciones vertical">
+                        <label><input type="radio" name="capacitacionCajaFuerte" value="SI" required> SI</label>
+                        <label><input type="radio" name="capacitacionCajaFuerte" value="NO"> NO</label>
+                        <label><input type="radio" name="capacitacionCajaFuerte" value="NO APLICA"> NO APLICA</label>
+                    </div>
+                </div>
+
+                <div class="grupo">
+                    <label>¿En caso de que se encuentre una sola persona en tienda, la puerta corrediza estaba cerrada y asegurada? <span>*</span></label>
+
+                    <p class="ayuda">
+                        Ejemplo 1: En la tienda se encontraban los 2 asesores al momento de la auditoría.
+                        <br>
+                        Ejemplo 2: En la tienda se encontraba un solo asesor y la puerta corrediza sí se encontraba cerrada y con seguro.
+                    </p>
+
+                    <div class="opciones vertical">
+                        <label><input type="radio" name="puertaCorredizaAsegurada" value="SI" required> SI</label>
+                        <label><input type="radio" name="puertaCorredizaAsegurada" value="NO"> NO</label>
+                        <label><input type="radio" name="puertaCorredizaAsegurada" value="NO APLICA"> NO APLICA</label>
+                    </div>
+                </div>
+
+            </div>
 
             <!-- Botones finales del formulario -->
             <div class="botones">
