@@ -82,9 +82,18 @@
             -->
             <div class="grupo">
                 <label>Tienda <span>*</span></label>
-                <select id="tienda" name="tienda" required disabled>
-                    <option value="">Primero seleccione una ciudad</option>
-                </select>
+
+                <input 
+                    type="text"
+                    id="tienda"
+                    name="tienda"
+                    list="listaTiendas"
+                    placeholder="PRIMERO SELECCIONE UNA CIUDAD"
+                    required
+                    disabled
+                >
+
+                <datalist id="listaTiendas"></datalist>
             </div>
 
             <!-- 
@@ -106,6 +115,8 @@
                 Este espacio se llena con JavaScript.
             -->
             <div id="contenedorAuditores"></div>
+
+            <datalist id="listaAuditores"></datalist>
 
             <!-- ===================================================== -->
             <!-- SECCIÓN 2: INFORMACIÓN DEL VENDEDOR -->
@@ -331,6 +342,19 @@
                     </div>
                 </div>
 
+                <div class="grupo oculto" id="observacionInventarioJustificadaGrupo">
+                <label>Ingrese la observación del inventario con observaciones justificadas <span>*</span></label>
+                <p class="ayuda">
+                    Detalle el motivo de la observación justificada y el respaldo correspondiente.
+                </p>
+                <textarea 
+                    id="observacionInventarioJustificada"
+                    name="observacionInventarioJustificada"
+                    rows="4"
+                    placeholder="INGRESE LA OBSERVACIÓN JUSTIFICADA"
+                ></textarea>
+            </div>
+
                 <!-- Archivo del cuadre de inventario -->
                 <div class="grupo">
                     <label>Cargar el cuadre inventario firmados <span>*</span></label>
@@ -526,8 +550,38 @@
                     </div>
 
                     <div class="grupo oculto" id="casoGlpiPinturaGrupo">
-                        <label>En caso de que la respuesta sea "NO", adjunte el número de caso de GLPI <span>*</span></label>
-                        <input type="text" id="casoGlpiPintura" name="casoGlpiPintura" placeholder="INGRESE EL NÚMERO DE CASO GLPI">
+                        <label>En caso de que la respuesta sea "NO", detalle el daño y coloque el número de caso GLPI <span>*</span></label>
+
+                        <div class="tabla-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>COMENTARIO DE DAÑO</th>
+                                        <th>NÚMERO DE GLPI</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <textarea 
+                                                id="comentarioDanioPintura"
+                                                name="comentarioDanioPintura"
+                                                rows="3"
+                                                placeholder="DESCRIBA EL DAÑO"
+                                            ></textarea>
+                                        </td>
+                                        <td>
+                                            <input 
+                                                type="text"
+                                                id="numeroGlpiPintura"
+                                                name="numeroGlpiPintura"
+                                                placeholder="INGRESE NÚMERO GLPI"
+                                            >
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <!-- FOTO DEL INTERIOR DE LA TIENDA -->
@@ -645,7 +699,7 @@
                     </div>
                 </div>
                 <div class="grupo">
-                    <label>Observación de limpieza de la tienda <span>*</span></label>
+                    <label id="labelObservacionLimpieza">Observación de limpieza de la tienda <span>*</span></label>
                     <p class="ayuda">
                         Ejemplo: LAS ESTANTERÍAS Y EXPOSITORES PRESENTAN ACUMULACIÓN DE POLVO EN CIERTOS LUGARES,
                         Y AUNQUE LOS PRODUCTOS NO ESTÁN VISIBLEMENTE SUCIOS, PODRÍAN BENEFICIARSE DE UNA LIMPIEZA MÁS FRECUENTE.
@@ -664,6 +718,10 @@
                         <div class="opciones vertical">
                             <label><input type="radio" name="cedulasTerceros" value="NO EXISTEN" required> NO EXISTEN CÉDULAS DE TERCEROS</label>
                             <label><input type="radio" name="cedulasTerceros" value="SI EXISTEN"> SÍ EXISTEN CÉDULAS DE TERCEROS</label>
+                        </div>
+
+                        <div class="aviso-importante oculto" id="avisoCedulasTerceros">
+                            Retirar las cédulas encontradas y entregar a Daniel Oña.
                         </div>
                     </div>
                 </div>
@@ -808,7 +866,6 @@
                 "SAN ANTONIO",
                 "SANTA CLARA",
                 "ISLA TUMBACO",
-                "AJAVI",
                 "CHILLOGALLO",
                 "FUNDEPORTE",
                 "CUMBAYA",
@@ -818,7 +875,6 @@
                 "MARTHA BUCARAM",
                 "PLAZA DEL TEATRO",
                 "QUICENTRO SUR 1",
-                "QUICENTRO SUR 2",
                 "RECREO 1",
                 "RECREO 2",
                 "RECREO 3",
@@ -829,11 +885,6 @@
                 "VENTAS DIGITALES QUITO",
                 "PROCESOS",
                 "TIENDAS SIERRA",
-                "RECREO 1, 2, 3",
-                "QUICENTRO SUR 1, 2",
-                "COTOCOLLAO 1, 2",
-                "COMITE DEL PUEBLO 1, 2",
-                "CARAPUNGO 1, 2",
                 "TIENDAS QUITO SUR",
                 "TIENDAS QUITO NORTE",
                 "CALDERÓN 1, 2",
@@ -863,7 +914,7 @@
                 "HAPPY TIA TREBOL",
                 "CITY MALL",
                 "BODEGA MATRIZ GYE"
-            ]
+            ].sort((a, b) => a.localeCompare(b, "es"))
         };
 
         /*
@@ -917,8 +968,24 @@
             "DANIELA ALEMAN",
             "ALEJANDRO GALARZA",
             "EDUARDO JACOME",
+            "LINDSAY POZO",
+            "SELENE CAICEDO",
+            "MARIA ALVAREZ",
+            "MARICELA VERA",
+            "ADRIAN OBANDO",
             "FELIPE PANTOJA"
         ].sort((a, b) => a.localeCompare(b, "es"));
+
+        // =====================================================
+        // Carga los auditores en el buscador.
+        // =====================================================
+        const listaAuditores = document.getElementById("listaAuditores");
+
+        auditores.forEach(auditor => {
+            const option = document.createElement("option");
+            option.value = auditor;
+            listaAuditores.appendChild(option);
+        });
 
         /*
             Aquí se guardan en variables algunos campos del formulario.
@@ -1023,6 +1090,7 @@
                 mostrarUOcultarSeccion("seccionEstadoTiendaNormal", false);
                 mostrarUOcultarSeccion("seccionCedulasTerceros", false);
                 mostrarUOcultarSeccion("seccionSeguridadTiendas", false);
+                document.getElementById("labelObservacionLimpieza").innerHTML = 'Observación de limpieza de la bodega <span>*</span>';
 
                 // =====================================================
                 // PARA BODEGAS: MOSTRAR
@@ -1035,7 +1103,7 @@
                 // =====================================================
                 // PARA TIENDAS NORMALES
                 // =====================================================
-
+                document.getElementById("labelObservacionLimpieza").innerHTML = 'Observación de limpieza de la tienda <span>*</span>';
                 mostrarUOcultarSeccion("seccionValidacionTienda", true);
                 mostrarUOcultarSeccion("seccionCuadreCaja", true);
                 mostrarUOcultarSeccion("seccionPermisos", true);
@@ -1062,32 +1130,43 @@
             aplicarVistaPorTienda();
         });
 
-        /*
-        Cuando cambia la ciudad, se limpian las tiendas
-        y se cargan las tiendas de la ciudad seleccionada.
-        */
+        // =====================================================
+        // Cuando se escribe o selecciona una tienda,
+        // se revisa si es bodega.
+        // =====================================================
+        tiendaSelect.addEventListener("input", function () {
+            aplicarVistaPorTienda();
+        });
 
+        // =====================================================
+        // Cuando cambia la ciudad, se cargan las tiendas
+        // en el buscador de tiendas.
+        // =====================================================
         ciudadSelect.addEventListener("change", function () {
-
             const ciudad = this.value;
+            const listaTiendas = document.getElementById("listaTiendas");
 
-            tiendaSelect.innerHTML = "";
+            tiendaSelect.value = "";
+            listaTiendas.innerHTML = "";
 
             if (!ciudad) {
                 tiendaSelect.disabled = true;
-                tiendaSelect.innerHTML = '<option value="">Primero seleccione una ciudad</option>';
+                tiendaSelect.placeholder = "PRIMERO SELECCIONE UNA CIUDAD";
                 return;
             }
 
             tiendaSelect.disabled = false;
-            tiendaSelect.innerHTML = '<option value="">Seleccione</option>';
+            tiendaSelect.placeholder = "ESCRIBA PARA BUSCAR UNA TIENDA";
 
-            tiendasPorCiudad[ciudad].forEach(tienda => {
-                const option = document.createElement("option");
-                option.value = tienda;
-                option.textContent = tienda;
-                tiendaSelect.appendChild(option);
-            });
+            tiendasPorCiudad[ciudad]
+                .sort((a, b) => a.localeCompare(b, "es"))
+                .forEach(tienda => {
+                    const option = document.createElement("option");
+                    option.value = tienda;
+                    listaTiendas.appendChild(option);
+                });
+
+            aplicarVistaPorTienda();
         });
 
         /*
@@ -1110,10 +1189,13 @@
 
                     <div class="grupo">
                         <label>Seleccione Auditor ${i} <span>*</span></label>
-                        <select name="auditor${i}" required>
-                            <option value="">Seleccione</option>
-                            ${auditores.map(auditor => `<option value="${auditor}">${auditor}</option>`).join("")}
-                        </select>
+                        <input 
+                            type="text"
+                            name="auditor${i}"
+                            list="listaAuditores"
+                            placeholder="ESCRIBA PARA BUSCAR AUDITOR ${i}"
+                            required
+                        >
                     </div>
 
                     <div class="grupo">
@@ -1201,16 +1283,13 @@
         const tablaFaltantesGrupo = document.getElementById("tablaFaltantesGrupo");
         const tablaFaltantesBody = document.getElementById("tablaFaltantesBody");
 
-        /*
-            Según la cantidad de artículos faltantes,
-            se crea una tabla con la misma cantidad de filas.
-        */
-// =====================================================
-// Crea la tabla según la cantidad de artículos faltantes.
-// También calcula automáticamente DIF = CANT FÍSICO - CANT KARDEX.
-// =====================================================
-        cantidadFaltantes.addEventListener("input", function () {
-            const cantidad = parseInt(this.value) || 0;
+        // =====================================================
+        // Crea la tabla de artículos faltantes.
+        // Para NO CUADRÓ EL INVENTARIO muestra NÚMERO GLP.
+        // Para OBSERVACIONES JUSTIFICADAS no muestra NÚMERO GLP.
+        // =====================================================
+        function crearTablaFaltantes(mostrarGlp) {
+            const cantidad = parseInt(cantidadFaltantes.value) || 0;
 
             tablaFaltantesBody.innerHTML = "";
 
@@ -1221,6 +1300,27 @@
 
             tablaFaltantesGrupo.classList.remove("oculto");
 
+            const encabezado = tablaFaltantesGrupo.querySelector("thead tr");
+
+            if (mostrarGlp) {
+                encabezado.innerHTML = `
+                    <th>CÓDIGO</th>
+                    <th>DESCRIPCIÓN</th>
+                    <th>CANT KARDEX</th>
+                    <th>CANT FÍSICO</th>
+                    <th>DIF</th>
+                    <th>NÚMERO GLP</th>
+                `;
+            } else {
+                encabezado.innerHTML = `
+                    <th>CÓDIGO</th>
+                    <th>DESCRIPCIÓN</th>
+                    <th>CANT KARDEX</th>
+                    <th>CANT FÍSICO</th>
+                    <th>DIF</th>
+                `;
+            }
+
             for (let i = 1; i <= cantidad; i++) {
                 const fila = document.createElement("tr");
 
@@ -1230,7 +1330,11 @@
                     <td><input type="number" name="cantKardex${i}" id="cantKardex${i}" min="0" required></td>
                     <td><input type="number" name="cantFisico${i}" id="cantFisico${i}" min="0" required></td>
                     <td><input type="number" name="diferencia${i}" id="diferencia${i}" readonly required></td>
-                    <td><input type="text" name="numeroGlp${i}" required></td>
+                    ${
+                        mostrarGlp 
+                        ? `<td><input type="text" name="numeroGlp${i}" required></td>` 
+                        : ``
+                    }
                 `;
 
                 tablaFaltantesBody.appendChild(fila);
@@ -1249,6 +1353,13 @@
                 cantKardex.addEventListener("input", calcularDiferencia);
                 cantFisico.addEventListener("input", calcularDiferencia);
             }
+        }
+
+        cantidadFaltantes.addEventListener("input", function () {
+            const opcionSeleccionada = document.querySelector('input[name="cuadreInventario"]:checked');
+            const mostrarGlp = opcionSeleccionada && opcionSeleccionada.value === "NO CUADRÓ EL INVENTARIO";
+
+            crearTablaFaltantes(mostrarGlp);
         });
 
         // =====================================================
@@ -1258,42 +1369,71 @@
         // - tabla de detalle
         // - valor de factura o acta de descuento
         // =====================================================
+        // =====================================================
+        // Reglas para el resultado del cuadre de inventario.
+        // =====================================================
         function aplicarReglaCuadreInventario() {
             const opcionSeleccionada = document.querySelector('input[name="cuadreInventario"]:checked');
+
             const cantidadGrupo = document.getElementById("cantidadFaltantesGrupo");
             const tablaGrupo = document.getElementById("tablaFaltantesGrupo");
             const valorGrupo = document.getElementById("valorFacturaActaGrupo");
             const cantidadInput = document.getElementById("cantidadFaltantes");
             const valorInput = document.getElementById("valorFacturaActa");
 
+            const observacionGrupo = document.getElementById("observacionInventarioJustificadaGrupo");
+            const observacionCampo = document.getElementById("observacionInventarioJustificada");
+
             if (!opcionSeleccionada) {
                 cantidadGrupo.classList.add("oculto");
                 tablaGrupo.classList.add("oculto");
                 valorGrupo.classList.add("oculto");
+                observacionGrupo.classList.add("oculto");
 
                 cantidadInput.required = false;
                 valorInput.required = false;
+                observacionCampo.required = false;
                 return;
             }
 
             if (opcionSeleccionada.value === "NO CUADRÓ EL INVENTARIO") {
                 cantidadGrupo.classList.remove("oculto");
                 valorGrupo.classList.remove("oculto");
+                observacionGrupo.classList.add("oculto");
 
                 cantidadInput.required = true;
                 valorInput.required = true;
+                observacionCampo.required = false;
+                observacionCampo.value = "";
 
-                cantidadFaltantes.dispatchEvent(new Event("input"));
-            } else {
+                crearTablaFaltantes(true);
+            } 
+            else if (opcionSeleccionada.value === "SI CUADRÓ EL INVENTARIO CON OBSERVACIONES JUSTIFICADAS") {
+                cantidadGrupo.classList.remove("oculto");
+                valorGrupo.classList.add("oculto");
+                observacionGrupo.classList.remove("oculto");
+
+                cantidadInput.required = true;
+                valorInput.required = false;
+                valorInput.value = "";
+
+                observacionCampo.required = true;
+
+                crearTablaFaltantes(false);
+            } 
+            else {
                 cantidadGrupo.classList.add("oculto");
                 tablaGrupo.classList.add("oculto");
                 valorGrupo.classList.add("oculto");
+                observacionGrupo.classList.add("oculto");
 
                 cantidadInput.required = false;
                 valorInput.required = false;
+                observacionCampo.required = false;
 
                 cantidadInput.value = "1";
                 valorInput.value = "";
+                observacionCampo.value = "";
                 tablaFaltantesBody.innerHTML = "";
             }
         }
@@ -1413,28 +1553,30 @@
                 }
             });
         });
-
         // =====================================================
         // PINTURA INTERNA
-        // Si responde NO, muestra campo para número de caso GLPI
+        // Si responde NO, muestra tabla para comentario de daño
+        // y número de GLPI.
         // =====================================================
-
         document.querySelectorAll('input[name="pinturaInterna"]').forEach(radio => {
             radio.addEventListener("change", function () {
                 const grupo = document.getElementById("casoGlpiPinturaGrupo");
-                const campo = document.getElementById("casoGlpiPintura");
+                const comentario = document.getElementById("comentarioDanioPintura");
+                const glpi = document.getElementById("numeroGlpiPintura");
 
                 if (this.value === "NO") {
                     grupo.classList.remove("oculto");
-                    campo.required = true;
+                    comentario.required = true;
+                    glpi.required = true;
                 } else {
                     grupo.classList.add("oculto");
-                    campo.required = false;
-                    campo.value = "";
+                    comentario.required = false;
+                    glpi.required = false;
+                    comentario.value = "";
+                    glpi.value = "";
                 }
             });
         });
-
         // =====================================================
         // NIVEL DE LIMPIEZA
         // Muestra la definición según la opción seleccionada
@@ -1614,6 +1756,23 @@
 
             return true;
         }
+
+
+        // =====================================================
+        // CÉDULAS DE TERCEROS
+        // Si existen cédulas, muestra aviso.
+        // =====================================================
+        document.querySelectorAll('input[name="cedulasTerceros"]').forEach(radio => {
+            radio.addEventListener("change", function () {
+                const aviso = document.getElementById("avisoCedulasTerceros");
+
+                if (this.value === "SI EXISTEN") {
+                    aviso.classList.remove("oculto");
+                } else {
+                    aviso.classList.add("oculto");
+                }
+            });
+        });
 
         /*
             Esta parte se ejecuta cuando se presiona el botón Guardar.

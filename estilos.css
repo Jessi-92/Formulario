@@ -358,3 +358,13 @@ td input[readonly] {
     color: #111827;
     font-weight: bold;
 }
+
+.aviso-importante {
+    background: #fff7ed;
+    border-left: 6px solid #f97316;
+    padding: 15px;
+    border-radius: 12px;
+    color: #7c2d12;
+    font-weight: bold;
+    margin-top: 15px;
+}
