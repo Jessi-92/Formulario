@@ -159,11 +159,47 @@
             </div>
 
             <!-- ===================================================== -->
+            <!-- Registro de Biometria -->
+            <!-- ===================================================== --> 
+            <div class="grupo">
+                <label>¿Registro su entrada en el biometrico? <span>*</span></label>
+
+                <div class="opciones vertical">
+                    <label><input type="radio" name="registroBiometrico" value="SI" required> SI</label>
+                    <label><input type="radio" name="registroBiometrico" value="NO"> NO</label>
+                </div>
+            </div>
+
+            <!-- ===================================================== -->
+            <!-- Puerta corrediza cerrada -->
+            <!-- ===================================================== --> 
+            <div class="grupo">
+                <label>¿La puerta corrediza permanecio cerrada en todo el proceso de la auditoria? <span>*</span></label>
+
+                <div class="opciones vertical">
+                    <label><input type="radio" name="puertaCerrada" value="SI" required> SI</label>
+                    <label><input type="radio" name="puertaCerrada" value="NO"> NO</label>
+                </div>
+            </div>
+
+
+            <!-- ===================================================== -->
             <!-- SECCIÓN 3: VALIDACIÓN DE TIENDA -->
             <!-- ===================================================== -->
             <div id="seccionValidacionTienda">
 
                 <h2>VALIDACIÓN DE TIENDA</h2>
+                <!-- 
+                    Pregunta sobre cuanto esta en caja.
+                -->
+                <div class="grupo">
+                    <label>¿En la caja hay mas de 50 dólares en efectivo? <span>*</span></label>
+
+                    <div class="opciones vertical">
+                        <label><input type="radio" name="efectivoCaja" value="SI" required> SI</label>
+                        <label><input type="radio" name="efectivoCaja" value="NO"> NO</label>
+                    </div>
+                </div>
 
                 <!-- 
                     Pregunta sobre uniforme.
