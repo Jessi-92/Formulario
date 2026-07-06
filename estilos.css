@@ -5,6 +5,12 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
+:root {
+    --ancho-imagen-permiso: 180px;
+    --alto-imagen-permiso: 130px;
+    --columnas-permisos: 2;
+}
+
 body {
     background: linear-gradient(135deg, #eef3ff, #e8f8ef);
     padding: 30px;
@@ -367,4 +373,81 @@ td input[readonly] {
     color: #7c2d12;
     font-weight: bold;
     margin-top: 15px;
+}
+
+/* ============================= */
+/* PERMISOS DE FUNCIONAMIENTO */
+/* ============================= */
+
+.permisos-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--columnas-permisos), 1fr);
+    gap: 22px;
+    margin-top: 18px;
+    width: 100%;
+}
+
+.permiso-card {
+    border: 1px solid #d1d5db;
+    border-radius: 14px;
+    padding: 14px;
+    background: #ffffff;
+    cursor: pointer;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    text-align: center;
+    min-height: 230px;
+    transition: all 0.25s ease;
+}
+
+.permiso-card:hover {
+    border-color: #4f46e5;
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.15);
+    transform: translateY(-2px);
+}
+
+.permiso-card input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    align-self: flex-start;
+    margin-bottom: 10px;
+    accent-color: #4f46e5;
+}
+
+.permiso-card img {
+    width: var(--ancho-imagen-permiso);
+    height: var(--alto-imagen-permiso);
+    object-fit: contain;
+    border-radius: 10px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    padding: 4px;
+}
+
+.permiso-card p {
+    margin-top: 10px;
+    margin-bottom: 0;
+    color: #dc2626;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.permiso-card small {
+    color: #111827;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* En celular se verá una tarjeta debajo de otra */
+@media (max-width: 768px) {
+    :root {
+        --columnas-permisos: 1;
+        --ancho-imagen-permiso: 160px;
+        --alto-imagen-permiso: 115px;
+    }
 }
