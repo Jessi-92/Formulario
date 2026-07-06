@@ -6,8 +6,8 @@
 }
 
 :root {
-    --ancho-imagen-permiso: 200px;
-    --alto-imagen-permiso: 130px;
+    --ancho-imagen-permiso: 300px;
+    --alto-imagen-permiso: 220px;
     --columnas-permisos: 2;
 }
 
@@ -400,7 +400,7 @@ td input[readonly] {
     justify-content: flex-start;
 
     text-align: center;
-    min-height: 230px;
+    min-height: 360px;
     transition: all 0.25s ease;
 }
 
