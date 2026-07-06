@@ -447,7 +447,7 @@ td input[readonly] {
 @media (max-width: 768px) {
     :root {
         --columnas-permisos: 1;
-        --ancho-imagen-permiso: 160px;
-        --alto-imagen-permiso: 115px;
+        --ancho-imagen-permiso: 200px;
+        --alto-imagen-permiso: 120px;
     }
 }
