@@ -488,14 +488,67 @@
                     </p>
 
                     <div class="grupo">
-                        <label>Revisar que cuente con los siguientes permisos de manera visible en la tienda <span>*</span></label>
-                        <div class="opciones vertical">
-                            <label><input type="checkbox" name="permisos[]" value="RUC (todas las tiendas)"> RUC (todas las tiendas)</label>
-                            <label><input type="checkbox" name="permisos[]" value="LUAE (Quito)"> LUAE (Quito)</label>
-                            <label><input type="checkbox" name="permisos[]" value="PERMISO DE BOMBEROS QUITO (OPCIONAL TODAS LAS TIENDAS)"> PERMISO DE BOMBEROS QUITO (OPCIONAL TODAS LAS TIENDAS)</label>
-                            <label><input type="checkbox" name="permisos[]" value="TASA HABILITACIÓN (SOLO GUAYAQUIL)"> TASA HABILITACIÓN (SOLO GUAYAQUIL)</label>
-                            <label><input type="checkbox" name="permisos[]" value="USO DE SUELO (SOLO DURAN)"> USO DE SUELO (SOLO DURAN)</label>
-                            <label><input type="checkbox" name="permisos[]" value="PERMISO FUNCIONAMIENTO BOMBEROS (SOLO GUAYAQUIL)"> PERMISO FUNCIONAMIENTO BOMBEROS (SOLO GUAYAQUIL) </label>  
+                        <label>
+                            Revisar que cuente con los siguientes permisos de manera visible en la tienda 
+                            <span>*</span>
+                        </label>
+
+                        <div class="opciones permisos-grid">
+
+                            <!-- RUC / SRI -->
+                            <label class="permiso-card">
+                                <input type="checkbox" name="permisos[]" value="RUC (todas las tiendas)">
+                                <div class="permiso-contenido">
+                                    <img src="sri.png" alt="Ejemplo RUC / SRI">
+                                    <span>RUC (todas las tiendas)</span>
+                                </div>
+                            </label>
+
+                            <!-- LUAE Quito -->
+                            <label class="permiso-card">
+                                <input type="checkbox" name="permisos[]" value="LUAE (Quito)">
+                                <div class="permiso-contenido">
+                                    <img src="luae.jpeg" alt="Ejemplo LUAE Quito">
+                                    <span>LUAE (Quito)</span>
+                                </div>
+                            </label>
+
+                            <!-- Bomberos Quito -->
+                            <label class="permiso-card">
+                                <input type="checkbox" name="permisos[]" value="PERMISO DE BOMBEROS QUITO (OPCIONAL TODAS LAS TIENDAS)">
+                                <div class="permiso-contenido">
+                                    <img src="bomberos.png" alt="Ejemplo Permiso de Bomberos Quito">
+                                    <span>PERMISO DE BOMBEROS QUITO (OPCIONAL TODAS LAS TIENDAS)</span>
+                                </div>
+                            </label>
+
+                            <!-- Tasa habilitación Guayaquil -->
+                            <label class="permiso-card">
+                                <input type="checkbox" name="permisos[]" value="TASA HABILITACIÓN (SOLO GUAYAQUIL)">
+                                <div class="permiso-contenido">
+                                    <img src="tasa-habilitacion.png" alt="Ejemplo Tasa de Habilitación">
+                                    <span>TASA HABILITACIÓN (SOLO GUAYAQUIL)</span>
+                                </div>
+                            </label>
+
+                            <!-- Uso de suelo Durán -->
+                            <label class="permiso-card">
+                                <input type="checkbox" name="permisos[]" value="USO DE SUELO (SOLO DURAN)">
+                                <div class="permiso-contenido">
+                                    <img src="uso-suelo.png" alt="Ejemplo Uso de Suelo">
+                                    <span>USO DE SUELO (SOLO DURÁN)</span>
+                                </div>
+                            </label>
+
+                            <!-- Bomberos Guayaquil -->
+                            <label class="permiso-card">
+                                <input type="checkbox" name="permisos[]" value="PERMISO FUNCIONAMIENTO BOMBEROS (SOLO GUAYAQUIL)">
+                                <div class="permiso-contenido">
+                                    <img src="bomberos-guayaquil.png" alt="Ejemplo Permiso Funcionamiento Bomberos Guayaquil">
+                                    <span>PERMISO FUNCIONAMIENTO BOMBEROS (SOLO GUAYAQUIL)</span>
+                                </div>
+                            </label>
+
                         </div>
                     </div>
 
