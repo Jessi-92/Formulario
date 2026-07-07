@@ -395,32 +395,7 @@
                 ></textarea>
             </div>
 
-                <!-- Archivo del cuadre de inventario -->
-                <div class="grupo">
-                    <label>Cargar el cuadre inventario firmados <span>*</span></label>
-
-                    <p class="ayuda">
-                        Cargar en digital las facturas generadas por los faltantes.
-                        Imprima el kárdex con la ayuda del responsable de tienda y, una vez realizado el inventario,
-                        digitalícelo en formato PDF y cárguelo con el siguiente nombre:
-                        <strong>Inventario_Calderon1_AB_15FEB2025.pdf</strong>
-                    </p>
-
-                    <input type="file" name="archivoInventario" accept="application/pdf" required>
-                </div>
-
-                <!-- Comentarios del inventario -->
-                <div class="grupo">
-                    <label>Ingrese sus comentarios <span>*</span></label>
-
-                    <p class="ayuda">
-                        Ejemplo: Faltaron dos audífonos y el responsable de tienda repuso el valor, el cual fue facturado.
-                    </p>
-
-                    <textarea name="comentariosInventario" rows="5" placeholder="INGRESE SUS COMENTARIOS" required></textarea>
-                </div>
-
-                <!-- 
+            <!-- 
                     Cantidad de artículos faltantes.
                     Si se coloca 0, no aparece la tabla.
                     Si se coloca 1 o más, se crea una tabla con esa cantidad de filas.
@@ -476,6 +451,30 @@
                 </div>
             </div>
 
+                <!-- Archivo del cuadre de inventario -->
+                <div class="grupo">
+                    <label>Cargar el cuadre inventario firmados <span>*</span></label>
+
+                    <p class="ayuda">
+                        Cargar en digital las facturas generadas por los faltantes.
+                        Imprima el kárdex con la ayuda del responsable de tienda y, una vez realizado el inventario,
+                        digitalícelo en formato PDF y cárguelo con el siguiente nombre:
+                        <strong>Inventario_Calderon1_AB_15FEB2025.pdf</strong>
+                    </p>
+
+                    <input type="file" name="archivoInventario" accept="application/pdf" required>
+                </div>
+
+                <!-- Comentarios del inventario -->
+                <div class="grupo">
+                    <label>Ingrese sus comentarios <span>*</span></label>
+
+                    <p class="ayuda">
+                        Ejemplo: Faltaron dos audífonos y el responsable de tienda repuso el valor, el cual fue facturado.
+                    </p>
+
+                    <textarea name="comentariosInventario" rows="5" placeholder="INGRESE SUS COMENTARIOS" required></textarea>
+                </div>
             <!-- ===================================================== -->
             <!-- SEGUNDA PARTE DEL FORMULARIO -->
             <!-- Esta sección aparece cuando se presiona Siguiente -->
