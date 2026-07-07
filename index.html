@@ -382,14 +382,16 @@
                 <label id="labelObservacionInventario">
                     Ingrese la observación del inventario <span>*</span>
                 </label>
-                <p class="ayuda">
-                    Detalle el motivo de la observación justificada y el respaldo correspondiente.
+
+                <p class="ayuda" id="ayudaObservacionInventario">
+                    Detalle el motivo de la observación correspondiente.
                 </p>
+
                 <textarea 
                     id="observacionInventarioJustificada"
                     name="observacionInventarioJustificada"
                     rows="4"
-                    placeholder="INGRESE LA OBSERVACIÓN JUSTIFICADA"
+                    placeholder="INGRESE LA OBSERVACIÓN"
                 ></textarea>
             </div>
 
@@ -1418,18 +1420,24 @@
             for (let i = 1; i <= cantidad; i++) {
                 const fila = document.createElement("tr");
 
-                fila.innerHTML = `
-                    <td><input type="text" name="codigoFaltante${i}" required></td>
-                    <td><input type="text" name="descripcionFaltante${i}" required></td>
-                    <td><input type="number" name="cantKardex${i}" id="cantKardex${i}" min="0" required></td>
-                    <td><input type="number" name="cantFisico${i}" id="cantFisico${i}" min="0" required></td>
-                    <td><input type="number" name="diferencia${i}" id="diferencia${i}" readonly required></td>
-                    ${
-                        mostrarGlpi
-                        ? `<td><input type="text" name="numeroGlpi${i}" placeholder="NÚMERO GLPI" required></td>`
-                        : ``
-                    }
-                `;
+                if (mostrarGlpi) {
+                    fila.innerHTML = `
+                        <td><input type="text" name="codigoFaltante${i}" required></td>
+                        <td><input type="text" name="descripcionFaltante${i}" required></td>
+                        <td><input type="number" name="cantKardex${i}" id="cantKardex${i}" min="0" required></td>
+                        <td><input type="number" name="cantFisico${i}" id="cantFisico${i}" min="0" required></td>
+                        <td><input type="number" name="diferencia${i}" id="diferencia${i}" readonly required></td>
+                        <td><input type="text" name="numeroGlpi${i}" placeholder="NÚMERO GLPI" required></td>
+                    `;
+                } else {
+                    fila.innerHTML = `
+                        <td><input type="text" name="codigoFaltante${i}" required></td>
+                        <td><input type="text" name="descripcionFaltante${i}" required></td>
+                        <td><input type="number" name="cantKardex${i}" id="cantKardex${i}" min="0" required></td>
+                        <td><input type="number" name="cantFisico${i}" id="cantFisico${i}" min="0" required></td>
+                        <td><input type="number" name="diferencia${i}" id="diferencia${i}" readonly required></td>
+                    `;
+                }
 
                 tablaFaltantesBody.appendChild(fila);
 
@@ -1470,92 +1478,83 @@
         // - tabla de detalle
         // - valor de factura o acta de descuento
         // =====================================================
-        // Reglas para el resultado del cuadre de inventario.
-        // =====================================================
-        function aplicarReglaCuadreInventario() {
-            const opcionSeleccionada = document.querySelector('input[name="cuadreInventario"]:checked');
+// Reglas para el resultado del cuadre de inventario.
+// =====================================================
+function aplicarReglaCuadreInventario() {
+    const opcionSeleccionada = document.querySelector('input[name="cuadreInventario"]:checked');
 
-            const cantidadGrupo = document.getElementById("cantidadFaltantesGrupo");
-            const tablaGrupo = document.getElementById("tablaFaltantesGrupo");
-            const valorGrupo = document.getElementById("valorFacturaActaGrupo");
-            const cantidadInput = document.getElementById("cantidadFaltantes");
-            const valorInput = document.getElementById("valorFacturaActa");
+    const cantidadGrupo = document.getElementById("cantidadFaltantesGrupo");
+    const tablaGrupo = document.getElementById("tablaFaltantesGrupo");
+    const valorGrupo = document.getElementById("valorFacturaActaGrupo");
+    const cantidadInput = document.getElementById("cantidadFaltantes");
+    const valorInput = document.getElementById("valorFacturaActa");
 
-            const observacionGrupo = document.getElementById("observacionInventarioJustificadaGrupo");
-            const observacionCampo = document.getElementById("observacionInventarioJustificada");
-            const labelObservacion = document.getElementById("labelObservacionInventario");
-            const ayudaObservacion = document.getElementById("ayudaObservacionInventario");
+    const observacionGrupo = document.getElementById("observacionInventarioJustificadaGrupo");
+    const observacionCampo = document.getElementById("observacionInventarioJustificada");
+    const labelObservacion = document.getElementById("labelObservacionInventario");
+    const ayudaObservacion = document.getElementById("ayudaObservacionInventario");
 
-            if (!opcionSeleccionada) {
-                cantidadGrupo.classList.add("oculto");
-                tablaGrupo.classList.add("oculto");
-                valorGrupo.classList.add("oculto");
-                observacionGrupo.classList.add("oculto");
+    if (!opcionSeleccionada) {
+        cantidadGrupo.classList.add("oculto");
+        tablaGrupo.classList.add("oculto");
+        valorGrupo.classList.add("oculto");
+        observacionGrupo.classList.add("oculto");
 
-                cantidadInput.required = false;
-                valorInput.required = false;
-                observacionCampo.required = false;
+        cantidadInput.required = false;
+        valorInput.required = false;
+        observacionCampo.required = false;
 
-                tablaFaltantesBody.innerHTML = "";
-                return;
-            }
+        tablaFaltantesBody.innerHTML = "";
+        return;
+    }
 
-            if (opcionSeleccionada.value === "SI CUADRÓ EL INVENTARIO CON OBSERVACIONES JUSTIFICADAS") {
-                // Muestra observación.
-                observacionGrupo.classList.remove("oculto");
-                observacionCampo.required = true;
+    if (opcionSeleccionada.value === "SI CUADRÓ EL INVENTARIO CON OBSERVACIONES JUSTIFICADAS") {
+        observacionGrupo.classList.remove("oculto");
+        observacionCampo.required = true;
 
-                labelObservacion.innerHTML = 'Ingrese la observación del inventario con observaciones justificadas <span>*</span>';
-                ayudaObservacion.textContent = "Detalle el motivo de la observación justificada y el respaldo correspondiente.";
+        labelObservacion.innerHTML = 'Ingrese la observación del inventario con observaciones justificadas <span>*</span>';
+        ayudaObservacion.textContent = "Detalle el motivo de la observación justificada y el respaldo correspondiente.";
 
-                // Muestra cantidad y tabla.
-                cantidadGrupo.classList.remove("oculto");
-                cantidadInput.required = true;
+        cantidadGrupo.classList.remove("oculto");
+        cantidadInput.required = true;
 
-                // No muestra valor de factura/acta.
-                valorGrupo.classList.add("oculto");
-                valorInput.required = false;
-                valorInput.value = "";
+        valorGrupo.classList.add("oculto");
+        valorInput.required = false;
+        valorInput.value = "";
 
-                // Tabla CON número GLPI.
-                crearTablaFaltantes(true);
-            } 
-            else if (opcionSeleccionada.value === "NO CUADRÓ EL INVENTARIO") {
-                // Muestra observación también para NO CUADRÓ.
-                observacionGrupo.classList.remove("oculto");
-                observacionCampo.required = true;
+        crearTablaFaltantes(true);
+    } 
+    else if (opcionSeleccionada.value === "NO CUADRÓ EL INVENTARIO") {
+        observacionGrupo.classList.remove("oculto");
+        observacionCampo.required = true;
 
-                labelObservacion.innerHTML = 'Ingrese la observación del inventario no cuadrado <span>*</span>';
-                ayudaObservacion.textContent = "Detalle el motivo por el cual no cuadró el inventario.";
+        labelObservacion.innerHTML = 'Ingrese la observación del inventario no cuadrado <span>*</span>';
+        ayudaObservacion.textContent = "Detalle el motivo por el cual no cuadró el inventario.";
 
-                // Muestra cantidad y tabla.
-                cantidadGrupo.classList.remove("oculto");
-                cantidadInput.required = true;
+        cantidadGrupo.classList.remove("oculto");
+        cantidadInput.required = true;
 
-                // Muestra valor de factura/acta.
-                valorGrupo.classList.remove("oculto");
-                valorInput.required = true;
+        valorGrupo.classList.remove("oculto");
+        valorInput.required = true;
 
-                // Tabla SIN número GLPI.
-                crearTablaFaltantes(false);
-            } 
-            else {
-                // SI CUADRÓ EL INVENTARIO: no muestra nada adicional.
-                cantidadGrupo.classList.add("oculto");
-                tablaGrupo.classList.add("oculto");
-                valorGrupo.classList.add("oculto");
-                observacionGrupo.classList.add("oculto");
+        crearTablaFaltantes(false);
+    } 
+    else {
+        cantidadGrupo.classList.add("oculto");
+        tablaGrupo.classList.add("oculto");
+        valorGrupo.classList.add("oculto");
+        observacionGrupo.classList.add("oculto");
 
-                cantidadInput.required = false;
-                valorInput.required = false;
-                observacionCampo.required = false;
+        cantidadInput.required = false;
+        valorInput.required = false;
+        observacionCampo.required = false;
 
-                cantidadInput.value = "1";
-                valorInput.value = "";
-                observacionCampo.value = "";
-                tablaFaltantesBody.innerHTML = "";
-            }
-        }
+        cantidadInput.value = "1";
+        valorInput.value = "";
+        observacionCampo.value = "";
+        tablaFaltantesBody.innerHTML = "";
+    }
+}
 
         document.querySelectorAll('input[name="cuadreInventario"]').forEach(radio => {
             radio.addEventListener("change", aplicarReglaCuadreInventario);
