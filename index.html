@@ -517,7 +517,7 @@
 
                             <label class="permiso-card">
                                 <input type="checkbox" name="permisos[]" value="PERMISO DE BOMBEROS QUITO (OPCIONAL TODAS LAS TIENDAS)">
-                                <img src="img/bomberos.png" alt="Permiso de Bomberos Quito">
+                                <img src="img/bomberos_quito.png" alt="Permiso de Bomberos Quito">
                                 <p>
                                     PERMISO DE BOMBEROS QUITO
                                     <br>
@@ -527,7 +527,7 @@
 
                             <label class="permiso-card">
                                 <input type="checkbox" name="permisos[]" value="TASA HABILITACIÓN (SOLO GUAYAQUIL)">
-                                <img src="img/tasa-habilitacion.png" alt="Tasa de Habilitación">
+                                <img src="img/tasa_habilitacion_gye.png" alt="Tasa de Habilitación">
                                 <p>
                                     TASA HABILITACIÓN
                                     <br>
@@ -537,7 +537,7 @@
 
                             <label class="permiso-card">
                                 <input type="checkbox" name="permisos[]" value="USO DE SUELO (SOLO DURAN)">
-                                <img src="img/uso-suelo.png" alt="Uso de Suelo">
+                                <img src="img/uso_suelo_duran.png" alt="Uso de Suelo">
                                 <p>
                                     USO DE SUELO
                                     <br>
@@ -547,7 +547,7 @@
 
                             <label class="permiso-card">
                                 <input type="checkbox" name="permisos[]" value="PERMISO FUNCIONAMIENTO BOMBEROS (SOLO GUAYAQUIL)">
-                                <img src="img/bomberos-guayaquil.png" alt="Permiso Funcionamiento Bomberos Guayaquil">
+                                <img src="img/funcionamiento_gye.png" alt="Permiso Funcionamiento Bomberos Guayaquil">
                                 <p>
                                     PERMISO FUNCIONAMIENTO BOMBEROS
                                     <br>
@@ -1401,7 +1401,6 @@
                     <th>CANT KARDEX</th>
                     <th>CANT FÍSICO</th>
                     <th>DIF</th>
-                    <th>NÚMERO GLP</th>
                 `;
             } else {
                 encabezado.innerHTML = `
@@ -1410,6 +1409,7 @@
                     <th>CANT KARDEX</th>
                     <th>CANT FÍSICO</th>
                     <th>DIF</th>
+                    <th>NÚMERO GLP</th>
                 `;
             }
 
@@ -1495,7 +1495,7 @@
 
                 cantidadInput.required = true;
                 valorInput.required = true;
-                observacionCampo.required = false;
+                observacionCampo.required = true;
                 observacionCampo.value = "";
 
                 crearTablaFaltantes(true);
