@@ -443,6 +443,11 @@ td input[readonly] {
     font-weight: 600;
 }
 
+.zona-arrastre-activa {
+    border: 2px dashed #2563eb !important;
+    background: #eff6ff !important;
+}
+
 /* En celular se verá una tarjeta debajo de otra */
 @media (max-width: 768px) {
     :root {

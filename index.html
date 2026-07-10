@@ -279,7 +279,7 @@
 
                 <!-- Campo oculto que se muestra solo si el formato NO está firmado o cuadrado -->
                 <div class="grupo oculto" id="observacionFormatoGrupo">
-                    <label>Ingrese la observación del formato no cuadrado o no firmado <span>*</span></label>
+                    <label>Ingrese sus observaciones y novedades <span>*</span></label>
                     <textarea id="observacionFormato" name="observacionFormato" rows="4" placeholder="INGRESE LA OBSERVACIÓN"></textarea>
                 </div>
 
@@ -538,16 +538,6 @@
                     >
                 </div>
 
-                <!-- Comentarios del inventario -->
-                <div class="grupo">
-                    <label>Ingrese sus comentarios <span>*</span></label>
-
-                    <p class="ayuda">
-                        Ejemplo: Faltaron dos audífonos y el responsable de tienda repuso el valor, el cual fue facturado.
-                    </p>
-
-                    <textarea name="comentariosInventario" rows="5" placeholder="INGRESE SUS COMENTARIOS" required></textarea>
-                </div>
             <!-- ===================================================== -->
             <!-- SEGUNDA PARTE DEL FORMULARIO -->
             <!-- Esta sección aparece cuando se presiona Siguiente -->
@@ -647,7 +637,7 @@
                 <div id="seccionEstadoTiendaNormal">
 
                     <div class="grupo">
-                        <label>¿La tienda cuenta con dispositivos electrónicos? <span>*</span></label>
+                        <label>¿La tienda cuenta con dispositivos electrónicos en mal estado? <span>*</span></label>
 
                         <p class="ayuda">
                             Dispositivos electrónicos: TECLADO, MOUSE, PARLANTE, IMPRESORA TÉRMICA, IMPRESORA MULTIFUNCIÓN,
@@ -657,17 +647,7 @@
                         <div class="opciones vertical">
                             <label><input type="radio" name="dispositivosElectronicos" value="SI" required> SI</label>
                             <label><input type="radio" name="dispositivosElectronicos" value="NO"> NO</label>
-                            <label><input type="radio" name="dispositivosElectronicos" value="SI CON NOVEDADES"> SI CON NOVEDADES</label>
                         </div>
-                    </div>
-
-                    <div class="grupo oculto" id="comentarioDispositivosGrupo">
-                        <label>Ingrese sus comentarios <span>*</span></label>
-                        <p class="ayuda">
-                            SI EXISTEN DISPOSITIVOS ELECTRÓNICOS CON NOVEDADES, VALIDAR QUE SE NOTIFICÓ MEDIANTE GLPI.
-                            REGISTRAR EL NÚMERO DE FORMULARIO O TICKET DE GLPI.
-                        </p>
-                        <textarea id="comentarioDispositivos" name="comentarioDispositivos" rows="4" placeholder="INGRESE SUS COMENTARIOS"></textarea>
                     </div>
 
                     <div class="grupo">
@@ -685,8 +665,7 @@
                         </div>
                     </div>
 
-                    <div class="grupo">
-                        <label>¿Tienen grapado o añadido en los volantes otro tipo de publicidad como tarjetas o impresiones con promociones ajenas a HappyCel? <span>*</span></label>
+                    <div class="grupo" id="grupoPublicidadAjena">
                         <p class="ayuda">
                             Ejemplo: LAS HOJAS VOLANTES EN LA TIENDA TIENEN GRAPADAS OTRAS PROMOCIONES QUE NO PERTENECEN A HAPPYCEL.
                         </p>
@@ -947,13 +926,13 @@
                     </div>
                 </div>
 
-                <div class="grupo">
-                    <label>Escriba sus comentarios o novedades <span>*</span></label>
+                <div class="grupo oculto" id="comentariosSeguridadGrupo">
+                    <label>Ingrese sus comentarios y novedades <span>*</span></label>
                     <textarea 
+                        id="comentariosSeguridad"
                         name="comentariosSeguridad" 
                         rows="4" 
-                        placeholder="INGRESE SUS COMENTARIOS O NOVEDADES"
-                        required
+                        placeholder="INGRESE SUS COMENTARIOS Y NOVEDADES"
                     ></textarea>
                 </div>
 
@@ -1175,26 +1154,22 @@
         ];
 
         // =====================================================
-        // Revisa si la tienda seleccionada es una bodega.
-        // Se usa trim() y toUpperCase() para evitar errores
-        // por espacios o diferencias de mayúsculas/minúsculas.
+        // Revisa si la tienda seleccionada es BODEGA o VENTAS DIGITALES.
+        // Estas se comportan igual: se ocultan las mismas secciones.
         // =====================================================
         function esBodegaSeleccionada() {
             const tiendaSeleccionada = tiendaSelect.value.trim().toUpperCase();
 
-            return bodegasEspeciales.some(bodega => 
-                bodega.trim().toUpperCase() === tiendaSeleccionada
+            return (
+                tiendaSeleccionada.includes("BODEGA") ||
+                tiendaSeleccionada.includes("VENTAS DIGITALES")
             );
         }
 
-        // Esta función oculta o muestra una sección completa.
-        // También desactiva el required de los campos ocultos,
-        // para que el formulario no pida llenar preguntas que no se ven.
+        // Muestra u oculta una sección.
+        // Cuando se oculta, se desactivan sus campos para que no pidan validación.
+        // Cuando se muestra, se vuelven a activar.
         // =====================================================
-// Muestra u oculta una sección.
-// Cuando se oculta, se desactivan sus campos para que no pidan validación.
-// Cuando se muestra, se vuelven a activar.
-// =====================================================
         function mostrarUOcultarSeccion(idSeccion, mostrar) {
             const seccion = document.getElementById(idSeccion);
 
@@ -1723,26 +1698,6 @@ function aplicarReglaCuadreInventario() {
             });
         });
         // =====================================================
-        // DISPOSITIVOS ELECTRÓNICOS
-        // Si responde SI CON NOVEDADES, muestra comentarios
-        // =====================================================
-
-        document.querySelectorAll('input[name="dispositivosElectronicos"]').forEach(radio => {
-            radio.addEventListener("change", function () {
-                const grupo = document.getElementById("comentarioDispositivosGrupo");
-                const campo = document.getElementById("comentarioDispositivos");
-
-                if (this.value === "SI CON NOVEDADES") {
-                    grupo.classList.remove("oculto");
-                    campo.required = true;
-                } else {
-                    grupo.classList.add("oculto");
-                    campo.required = false;
-                    campo.value = "";
-                }
-            });
-        });
-        // =====================================================
         // PINTURA INTERNA
         // Si responde NO, muestra tabla para comentario de daño
         // y número de GLPI.
@@ -1980,6 +1935,291 @@ function aplicarReglaCuadreInventario() {
             });
         });
 
+
+        // =====================================================
+        // ESTANDARIZAR CAMPOS DE COMENTARIOS
+        // Todos los textarea tendrán el mismo placeholder.
+        // =====================================================
+        function estandarizarComentarios() {
+            document.querySelectorAll("textarea").forEach(textarea => {
+                textarea.placeholder = "INGRESE SUS COMENTARIOS Y NOVEDADES";
+            });
+        }
+
+        estandarizarComentarios();
+
+
+        // =====================================================
+        // VOLANTES
+        // Si la tienda NO dispone de volantes, se oculta la pregunta
+        // de publicidad grapada o añadida.
+        // =====================================================
+        document.querySelectorAll('input[name="volantesCampania"]').forEach(radio => {
+            radio.addEventListener("change", function () {
+                const grupoPublicidad = document.getElementById("grupoPublicidadAjena");
+                const opcionesPublicidad = grupoPublicidad.querySelectorAll("input");
+
+                if (this.value === "NO") {
+                    grupoPublicidad.classList.add("oculto");
+
+                    opcionesPublicidad.forEach(input => {
+                        input.checked = false;
+                        input.required = false;
+                        input.disabled = true;
+                    });
+                } else {
+                    grupoPublicidad.classList.remove("oculto");
+
+                    opcionesPublicidad.forEach((input, index) => {
+                        input.disabled = false;
+                        input.required = index === 0;
+                    });
+                }
+            });
+        });
+
+        // =====================================================
+        // BOTÓN DE PÁNICO
+        // Solo muestra comentarios cuando NO FUNCIONA CORRECTAMENTE.
+        // =====================================================
+        document.querySelectorAll('input[name="botonPanicoFunciona"]').forEach(radio => {
+            radio.addEventListener("change", function () {
+                const grupo = document.getElementById("comentariosSeguridadGrupo");
+                const campo = document.getElementById("comentariosSeguridad");
+
+                if (this.value === "NO") {
+                    grupo.classList.remove("oculto");
+                    campo.required = true;
+                } else {
+                    grupo.classList.add("oculto");
+                    campo.required = false;
+                    campo.value = "";
+                }
+            });
+        });
+
+        // =====================================================
+        // PERMISOS
+        // Valida que se seleccione al menos un permiso,
+        // siempre que la sección esté visible.
+        // =====================================================
+        function validarPermisos() {
+            const seccionPermisos = document.getElementById("seccionPermisos");
+
+            if (
+                seccionPermisos.classList.contains("oculto") ||
+                seccionPermisos.querySelector("input")?.disabled
+            ) {
+                return true;
+            }
+
+            const permisosSeleccionados = document.querySelectorAll('input[name="permisos[]"]:checked');
+
+            if (permisosSeleccionados.length === 0) {
+                alert("Debe seleccionar al menos un permiso de funcionamiento.");
+                return false;
+            }
+
+            return true;
+        }
+
+        // =====================================================
+        // VALIDA QUE LA TIENDA EXISTA EN LA LISTA DE SU CIUDAD
+        // =====================================================
+        function validarTiendaExistente() {
+            const ciudad = ciudadSelect.value;
+            const tiendaIngresada = tiendaSelect.value.trim().toUpperCase();
+
+            if (!ciudad || !tiendasPorCiudad[ciudad]) {
+                alert("Debe seleccionar una ciudad válida.");
+                ciudadSelect.focus();
+                return false;
+            }
+
+            const existe = tiendasPorCiudad[ciudad].some(tienda =>
+                tienda.trim().toUpperCase() === tiendaIngresada
+            );
+
+            if (!existe) {
+                alert("La tienda ingresada no existe en la lista. Seleccione una tienda válida del buscador.");
+                tiendaSelect.focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        // =====================================================
+        // VALIDA QUE LOS AUDITORES EXISTAN EN LA LISTA
+        // =====================================================
+        function validarAuditoresExistentes() {
+            const camposAuditores = document.querySelectorAll('input[name^="auditor"]');
+
+            for (const campo of camposAuditores) {
+                const auditorIngresado = campo.value.trim().toUpperCase();
+
+                const existe = auditores.some(auditor =>
+                    auditor.trim().toUpperCase() === auditorIngresado
+                );
+
+                if (!existe) {
+                    alert("El auditor ingresado no existe en la lista. Seleccione un auditor válido del buscador.");
+                    campo.focus();
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // =====================================================
+        // VALIDACIÓN BÁSICA DEL RESPONSABLE / VENDEDOR
+        // Como no hay una lista oficial de vendedores, se valida que
+        // al menos tenga nombre y apellido.
+        // =====================================================
+        function validarNombreVendedor() {
+            const campo = document.querySelector('input[name="nombreVendedor"]');
+
+            if (!campo) return true;
+
+            const palabras = campo.value.trim().split(/\s+/);
+
+            if (palabras.length < 2) {
+                alert("Ingrese el nombre y apellido del vendedor o responsable.");
+                campo.focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        // =====================================================
+        // GUARDAR Y RECUPERAR DATOS DEL FORMULARIO
+        // Evita perder la información si se recarga la página.
+        // Nota: los archivos no se pueden recuperar por seguridad.
+        // =====================================================
+        const CLAVE_FORMULARIO = "auditoriaHappyCel";
+
+        function guardarFormularioLocal() {
+            const form = document.getElementById("formAuditoria");
+            const datos = {};
+
+            form.querySelectorAll("input, select, textarea").forEach(campo => {
+                if (!campo.name && !campo.id) return;
+                if (campo.type === "file") return;
+
+                const clave = campo.name || campo.id;
+
+                if (campo.type === "radio") {
+                    if (campo.checked) {
+                        datos[clave] = campo.value;
+                    }
+                } else if (campo.type === "checkbox") {
+                    if (!datos[clave]) datos[clave] = [];
+                    if (campo.checked) datos[clave].push(campo.value);
+                } else {
+                    datos[clave] = campo.value;
+                }
+            });
+
+            localStorage.setItem(CLAVE_FORMULARIO, JSON.stringify(datos));
+        }
+
+        function recuperarFormularioLocal() {
+            const datosGuardados = localStorage.getItem(CLAVE_FORMULARIO);
+
+            if (!datosGuardados) return;
+
+            const datos = JSON.parse(datosGuardados);
+            const form = document.getElementById("formAuditoria");
+
+            Object.keys(datos).forEach(clave => {
+                const valor = datos[clave];
+
+                if (Array.isArray(valor)) {
+                    valor.forEach(v => {
+                        const checkbox = form.querySelector(`[name="${clave}"][value="${v}"]`);
+                        if (checkbox) checkbox.checked = true;
+                    });
+                    return;
+                }
+
+                const radio = form.querySelector(`[name="${clave}"][value="${valor}"]`);
+
+                if (radio && radio.type === "radio") {
+                    radio.checked = true;
+                    radio.dispatchEvent(new Event("change"));
+                    return;
+                }
+
+                const campo = form.querySelector(`[name="${clave}"], #${clave}`);
+
+                if (campo && campo.type !== "file") {
+                    campo.value = valor;
+                    campo.dispatchEvent(new Event("change"));
+                    campo.dispatchEvent(new Event("input"));
+                }
+            });
+
+            aplicarVistaPorTienda();
+            aplicarReglaCuadreInventario();
+        }
+
+        document.getElementById("formAuditoria").addEventListener("input", guardarFormularioLocal);
+        document.getElementById("formAuditoria").addEventListener("change", guardarFormularioLocal);
+
+        setTimeout(recuperarFormularioLocal, 500);
+
+
+        // =====================================================
+        // ARRASTRAR Y SOLTAR ARCHIVOS
+        // Funciona para PDF e imágenes.
+        // =====================================================
+        function activarArrastreArchivo(idInput, idTexto) {
+            const input = document.getElementById(idInput);
+            const texto = document.getElementById(idTexto);
+
+            if (!input || !texto) return;
+
+            const zona = input.closest(".grupo");
+
+            if (!zona) return;
+
+            zona.addEventListener("dragover", function (e) {
+                e.preventDefault();
+                zona.classList.add("zona-arrastre-activa");
+            });
+
+            zona.addEventListener("dragleave", function () {
+                zona.classList.remove("zona-arrastre-activa");
+            });
+
+            zona.addEventListener("drop", function (e) {
+                e.preventDefault();
+                zona.classList.remove("zona-arrastre-activa");
+
+                const archivo = e.dataTransfer.files[0];
+
+                if (!archivo) return;
+
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(archivo);
+                input.files = dataTransfer.files;
+
+                texto.textContent = archivo.name;
+
+                input.dispatchEvent(new Event("change"));
+            });
+        }
+
+        // PDF
+        activarArrastreArchivo("archivoCuadreCaja", "nombreArchivoCuadreCaja");
+        activarArrastreArchivo("archivoInventario", "nombreArchivoInventario");
+
+        // Fotos
+        activarArrastreArchivo("subirFotoInterior", "nombreFotoInterior");
+        activarArrastreArchivo("subirFotoFachada", "nombreFotoFachada");
+
         /*
             Esta parte se ejecuta cuando se presiona el botón Guardar.
             Primero revisa que los campos obligatorios estén llenos.
@@ -1989,11 +2229,27 @@ function aplicarReglaCuadreInventario() {
         document.getElementById("formAuditoria").addEventListener("submit", function (e) {
             e.preventDefault();
 
+            if (!validarTiendaExistente()) {
+                return;
+            }
+
+            if (!validarAuditoresExistentes()) {
+                return;
+            }
+
+            if (!validarNombreVendedor()) {
+                return;
+            }
+
             if (!validarCedulas()) {
                 return;
             }
 
             if (!validarFotosObligatorias()) {
+                return;
+            }
+
+            if (!validarPermisos()) {
                 return;
             }
 
@@ -2005,31 +2261,33 @@ function aplicarReglaCuadreInventario() {
             alert("Formulario guardado correctamente. Luego conectamos esto a base de datos o Google Sheets.");
         });
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const opcionesCuadre = document.querySelectorAll('input[name="cuadreCaja"]');
-            const camposCuadreCaja = document.getElementById("camposCuadreCaja");
-            const valorCuadreCaja = document.getElementById("valorCuadreCaja");
-            const comentariosCuadreCaja = document.getElementById("comentariosCuadreCaja");
+        // =====================================================
+        // CUADRE DE CAJA
+        // Si selecciona CUADRÓ, no muestra valor ni comentarios.
+        // Para las demás opciones sí muestra los campos adicionales.
+        // =====================================================
+        document.querySelectorAll('input[name="cuadreCaja"]').forEach(opcion => {
+            opcion.addEventListener("change", function () {
+                const camposCuadreCaja = document.getElementById("camposCuadreCaja");
+                const valorCuadreCaja = document.getElementById("valorCuadreCaja");
+                const comentariosCuadreCaja = document.getElementById("comentariosCuadreCaja");
 
-            opcionesCuadre.forEach(function (opcion) {
-                opcion.addEventListener("change", function () {
-                    if (this.value === "CUADRÓ") {
-                        camposCuadreCaja.classList.add("oculto");
+                if (this.value === "CUADRÓ") {
+                    camposCuadreCaja.classList.add("oculto");
 
-                        valorCuadreCaja.removeAttribute("required");
-                        comentariosCuadreCaja.removeAttribute("required");
+                    valorCuadreCaja.required = false;
+                    comentariosCuadreCaja.required = false;
 
-                        valorCuadreCaja.value = "";
-                        comentariosCuadreCaja.value = "";
-                    } else {
-                        camposCuadreCaja.classList.remove("oculto");
+                    valorCuadreCaja.value = "";
+                    comentariosCuadreCaja.value = "";
+                } else {
+                    camposCuadreCaja.classList.remove("oculto");
 
-                        valorCuadreCaja.setAttribute("required", "required");
-                        comentariosCuadreCaja.setAttribute("required", "required");
-                    }
-                });
+                    valorCuadreCaja.required = true;
+                    comentariosCuadreCaja.required = true;
+                }
             });
-        })
+        });
     </script>
 
 </body>
