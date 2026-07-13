@@ -80,20 +80,20 @@
                 Al inicio aparece bloqueado.
                 Se desbloquea cuando el usuario selecciona una ciudad.
             -->
-            <div class="grupo">
+            <div class="grupo buscador-contenedor">
                 <label>Tienda <span>*</span></label>
 
                 <input 
                     type="text"
                     id="tienda"
                     name="tienda"
-                    list="listaTiendas"
                     placeholder="PRIMERO SELECCIONE UNA CIUDAD"
+                    autocomplete="off"
                     required
                     disabled
                 >
 
-                <datalist id="listaTiendas"></datalist>
+                <div id="listaTiendasVisual" class="lista-buscador oculto"></div>
             </div>
 
             <!-- 
@@ -1157,6 +1157,105 @@
         const tiendaSelect = document.getElementById("tienda");
 
         // =====================================================
+        // BUSCADOR RESPONSIVE
+        // Funciona mejor que datalist en celular.
+        // Sirve para tiendas y auditores.
+        // =====================================================
+
+        function cerrarListaBuscador(idLista) {
+            const lista = document.getElementById(idLista);
+            if (lista) {
+                lista.classList.add("oculto");
+                lista.innerHTML = "";
+            }
+        }
+
+        function crearListaBuscador(input, listaId, opciones, alSeleccionar) {
+            const lista = document.getElementById(listaId);
+            const texto = input.value.trim().toUpperCase();
+
+            lista.innerHTML = "";
+
+            if (!texto) {
+                lista.classList.add("oculto");
+                return;
+            }
+
+            const resultados = opciones.filter(opcion =>
+                opcion.toUpperCase().startsWith(texto) ||
+                opcion.toUpperCase().includes(texto)
+            );
+
+            if (resultados.length === 0) {
+                const item = document.createElement("div");
+                item.className = "item-buscador";
+                item.textContent = "NO SE ENCONTRARON RESULTADOS";
+                lista.appendChild(item);
+                lista.classList.remove("oculto");
+                return;
+            }
+
+            resultados.forEach(opcion => {
+                const item = document.createElement("div");
+                item.className = "item-buscador";
+                item.textContent = opcion;
+
+                item.addEventListener("click", function () {
+                    input.value = opcion;
+                    lista.classList.add("oculto");
+                    lista.innerHTML = "";
+
+                    if (typeof alSeleccionar === "function") {
+                        alSeleccionar(opcion);
+                    }
+                });
+
+                lista.appendChild(item);
+            });
+
+            lista.classList.remove("oculto");
+        }
+
+        // =====================================================
+        // Buscador de tiendas.
+        // Muestra solo tiendas de la ciudad seleccionada.
+        // =====================================================
+        tiendaSelect.addEventListener("input", function () {
+            const ciudad = ciudadSelect.value;
+
+            if (!ciudad || !tiendasPorCiudad[ciudad]) {
+                cerrarListaBuscador("listaTiendasVisual");
+                return;
+            }
+
+            crearListaBuscador(
+                tiendaSelect,
+                "listaTiendasVisual",
+                tiendasPorCiudad[ciudad],
+                function () {
+                    aplicarVistaPorTienda();
+                }
+            );
+
+            aplicarVistaPorTienda();
+        });
+
+        tiendaSelect.addEventListener("focus", function () {
+            const ciudad = ciudadSelect.value;
+
+            if (!ciudad || !tiendasPorCiudad[ciudad]) return;
+
+            crearListaBuscador(
+                tiendaSelect,
+                "listaTiendasVisual",
+                tiendasPorCiudad[ciudad],
+                function () {
+                    aplicarVistaPorTienda();
+                }
+            );
+        });
+
+        // =====================================================
         // BODEGAS ESPECIALES
         // Estas tiendas tienen una vista diferente del formulario.
         // Cuando se selecciona una bodega, solo se muestra limpieza
@@ -1284,52 +1383,56 @@
         const numeroAuditoresSelect = document.getElementById("numeroAuditores");
         const contenedorAuditores = document.getElementById("contenedorAuditores");
 
-        // Cuando cambia la tienda, se revisa si es bodega.
-        // Si es bodega, se ocultan las secciones que no aplican.
         // =====================================================
-        tiendaSelect.addEventListener("change", function () {
-            aplicarVistaPorTienda();
-        });
+        // Activa buscador para un auditor creado dinámicamente.
+        // =====================================================
+        function activarBuscadorAuditor(numero) {
+            const inputAuditor = document.getElementById(`auditor${numero}`);
+            const listaId = `listaAuditor${numero}`;
+
+            if (!inputAuditor) return;
+
+            inputAuditor.addEventListener("input", function () {
+                crearListaBuscador(
+                    inputAuditor,
+                    listaId,
+                    auditores,
+                    function () {}
+                );
+            });
+
+            inputAuditor.addEventListener("focus", function () {
+                crearListaBuscador(
+                    inputAuditor,
+                    listaId,
+                    auditores,
+                    function () {}
+                );
+            });
+        }
 
         // =====================================================
-        // Cuando se escribe o selecciona una tienda,
-        // se revisa si es bodega.
-        // =====================================================
-        tiendaSelect.addEventListener("input", function () {
-            aplicarVistaPorTienda();
-        });
-
-        // =====================================================
-        // Cuando cambia la ciudad, se cargan las tiendas
-        // en el buscador de tiendas.
+        // Cuando cambia la ciudad, habilita el buscador de tiendas.
         // =====================================================
         ciudadSelect.addEventListener("change", function () {
             const ciudad = this.value;
-            const listaTiendas = document.getElementById("listaTiendas");
 
             tiendaSelect.value = "";
-            listaTiendas.innerHTML = "";
 
             if (!ciudad) {
                 tiendaSelect.disabled = true;
                 tiendaSelect.placeholder = "PRIMERO SELECCIONE UNA CIUDAD";
+                cerrarListaBuscador("listaTiendasVisual");
                 return;
             }
 
             tiendaSelect.disabled = false;
             tiendaSelect.placeholder = "ESCRIBA PARA BUSCAR UNA TIENDA";
 
-            tiendasPorCiudad[ciudad]
-                .sort((a, b) => a.localeCompare(b, "es"))
-                .forEach(tienda => {
-                    const option = document.createElement("option");
-                    option.value = tienda;
-                    listaTiendas.appendChild(option);
-                });
-
             aplicarVistaPorTienda();
         });
 
+        
         /*
             Cuando el usuario elige el número de auditores,
             se crean automáticamente los campos necesarios.
@@ -1348,16 +1451,19 @@
                 bloque.innerHTML = `
                     <h3>Auditor ${i}</h3>
 
-                    <div class="grupo">
-                        <label>Seleccione Auditor ${i} <span>*</span></label>
+                    <div class="buscador-contenedor">
                         <input 
                             type="text"
                             name="auditor${i}"
-                            list="listaAuditores"
+                            id="auditor${i}"
+                            class="campo-auditor"
                             placeholder="ESCRIBA PARA BUSCAR AUDITOR ${i}"
+                            autocomplete="off"
                             required
                         >
-                    </div>
+
+                        <div id="listaAuditor${i}" class="lista-buscador oculto"></div>
+                    </div>>
 
                     <div class="grupo">
                         <label>Ingrese número de cédula del Auditor ${i} <span>*</span></label>
@@ -1376,6 +1482,19 @@
                 `;
 
                 contenedorAuditores.appendChild(bloque);
+                activarBuscadorAuditor(i);
+            }
+        });
+
+        // =====================================================
+        // Cierra las listas cuando el usuario toca fuera.
+        // =====================================================
+        document.addEventListener("click", function (e) {
+            if (!e.target.closest(".buscador-contenedor")) {
+                document.querySelectorAll(".lista-buscador").forEach(lista => {
+                    lista.classList.add("oculto");
+                    lista.innerHTML = "";
+                });
             }
         });
 

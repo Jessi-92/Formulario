@@ -448,6 +448,87 @@ td input[readonly] {
     background: #eff6ff !important;
 }
 
+.buscador-contenedor {
+    position: relative;
+    width: 100%;
+}
+
+.lista-buscador {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 2px solid #c7d2fe;
+    border-radius: 10px;
+    max-height: 220px;
+    overflow-y: auto;
+    z-index: 9999;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.item-buscador {
+    padding: 12px 14px;
+    cursor: pointer;
+    font-size: 15px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.item-buscador:hover {
+    background: #eef2ff;
+}
+
+.item-buscador:last-child {
+    border-bottom: none;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    .contenedor {
+        width: 100%;
+    }
+
+    .formulario {
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    h1 {
+        font-size: 22px;
+    }
+
+    h2 {
+        font-size: 19px;
+    }
+
+    input,
+    select,
+    textarea {
+        font-size: 16px;
+    }
+
+    .lista-buscador {
+        max-height: 260px;
+        font-size: 16px;
+    }
+
+    .item-buscador {
+        padding: 14px;
+        font-size: 16px;
+    }
+
+    .botones {
+        flex-direction: column;
+    }
+
+    .botones button {
+        width: 100%;
+    }
+}
+
 /* En celular se verá una tarjeta debajo de otra */
 @media (max-width: 768px) {
     :root {
