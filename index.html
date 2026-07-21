@@ -321,7 +321,7 @@
 
                     <!-- Valor del faltante o sobrante -->
                     <div class="grupo">
-                        <label>Ponga el valor del faltante, observación o sobrante <span>*</span></label>
+                        <label>Ponga el valor del faltante o sobrante <span>*</span></label>
                         <input 
                             type="number" 
                             id="valorCuadreCaja"
@@ -650,6 +650,41 @@
                         </div>
                     </div>
 
+                    <div class="grupo oculto" id="comentarioDispositivosGrupo">
+                        <label>Detalle de dispositivos electrónicos en mal estado <span>*</span></label>
+
+                        <div class="tabla-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>COMENTARIO O DAÑO</th>
+                                        <th>NÚMERO DE GLPI</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <textarea 
+                                                id="comentarioDispositivos"
+                                                name="comentarioDispositivos"
+                                                rows="3"
+                                                placeholder="INGRESE SUS COMENTARIOS Y NOVEDADES"
+                                            ></textarea>
+                                        </td>
+                                        <td>
+                                            <input 
+                                                type="text"
+                                                id="numeroGlpiDispositivos"
+                                                name="numeroGlpiDispositivos"
+                                                placeholder="INGRESE NÚMERO GLPI"
+                                            >
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                     <div class="grupo">
                         <label>La TV de la tienda: ¿Está encendida? ¿Funciona correctamente? ¿Reproduce la publicidad del mes? <span>*</span></label>
                         <p class="ayuda">Ejemplo: TV ENCENDIDA, FUNCIONA CORRECTAMENTE, NO REPRODUCE LA PUBLICIDAD DEL MES.</p>
@@ -666,9 +701,10 @@
                     </div>
 
                     <div class="grupo" id="grupoPublicidadAjena">
-                        <p class="ayuda">
-                            Ejemplo: LAS HOJAS VOLANTES EN LA TIENDA TIENEN GRAPADAS OTRAS PROMOCIONES QUE NO PERTENECEN A HAPPYCEL.
-                        </p>
+                        <label>
+                            ¿Las hojas volantes en la tienda tienen grapadas otras promociones que no pertenecen a HappyCel?
+                            <span>*</span>
+                        </label>
 
                         <div class="opciones vertical">
                             <label><input type="radio" name="publicidadAjena" value="SI" required> SI</label>
@@ -962,25 +998,25 @@
                     </div>
                 </div>
 
-            </div>
+                <!-- ===================================================== -->
+                <!-- PREGUNTA FINAL: TIENDA MODELO -->
+                <!-- Esta pregunta aparece al final de Seguridad en Tiendas -->
+                <!-- ===================================================== -->
 
-            <!-- ===================================================== -->
-            <!-- PREGUNTA FINAL: TIENDA MODELO -->
-            <!-- Esta pregunta aparece al final del formulario -->
-            <!-- ===================================================== -->
+                <div class="grupo">
+                    <label>
+                        De acuerdo con su criterio, ¿la tienda visitada cumple con los estándares de una tienda modelo ejemplar en cuanto a limpieza e imagen corporativa?
+                        <span>*</span>
+                    </label>
 
-            <div class="grupo">
-                <label>
-                    De acuerdo con su criterio, ¿la tienda visitada cumple con los estándares de una tienda modelo ejemplar en cuanto a limpieza e imagen corporativa?
-                    <span>*</span>
-                </label>
+                    <textarea 
+                        name="comentarioTiendaModelo" 
+                        rows="5" 
+                        placeholder="INGRESE SUS COMENTARIOS Y NOVEDADES"
+                        required
+                    ></textarea>
+                </div>
 
-                <textarea 
-                    name="comentarioTiendaModelo" 
-                    rows="5" 
-                    placeholder="INGRESE SUS COMENTARIOS Y NOVEDADES"
-                    required
-                ></textarea>
             </div>
 
             <!-- Botones finales del formulario -->
@@ -2356,6 +2392,30 @@ function aplicarReglaCuadreInventario() {
         // Fotos
         activarArrastreArchivo("subirFotoInterior", "nombreFotoInterior");
         activarArrastreArchivo("subirFotoFachada", "nombreFotoFachada");
+
+        // =====================================================
+        // DISPOSITIVOS ELECTRÓNICOS EN MAL ESTADO
+        // Si responde SI, muestra comentario y número de GLPI.
+        // =====================================================
+        document.querySelectorAll('input[name="dispositivosElectronicos"]').forEach(radio => {
+            radio.addEventListener("change", function () {
+                const grupo = document.getElementById("comentarioDispositivosGrupo");
+                const comentario = document.getElementById("comentarioDispositivos");
+                const glpi = document.getElementById("numeroGlpiDispositivos");
+
+                if (this.value === "SI") {
+                    grupo.classList.remove("oculto");
+                    comentario.required = true;
+                    glpi.required = true;
+                } else {
+                    grupo.classList.add("oculto");
+                    comentario.required = false;
+                    glpi.required = false;
+                    comentario.value = "";
+                    glpi.value = "";
+                }
+            });
+        });
 
         /*
             Esta parte se ejecuta cuando se presiona el botón Guardar.
